@@ -34,7 +34,7 @@ Esta capa se encarga de:
 
 ### 2.2. Capa de visualización
 
-Ubicada en `visualizar/`. :contentReference[oaicite:1]{index=1}
+Ubicada en `visualizar/`.
 
 Esta capa está destinada al ensamblaje cartográfico y a la preparación de productos visuales. No sustituye el procesamiento analítico, sino que consume sus salidas para:
 
@@ -93,7 +93,7 @@ A nivel de procesamiento geoespacial, el proyecto adopta varias convenciones com
 
 ## 6. Estructura general del proyecto
 
-La estructura actual del proyecto incluye componentes para configuración, datos, documentación, scripts, pruebas, workflow y visualización. Entre los elementos ya definidos se encuentran `config/`, `data/`, `docs/`, `envs/`, `results/`, `scripts/`, `tests/`, `visualizar/` y `workflow/`, además del `Snakefile` y archivos README complementarios. :contentReference[oaicite:2]{index=2}
+La estructura actual del proyecto incluye componentes para configuración, datos, documentación, scripts, pruebas, workflow y visualización. Entre los elementos ya definidos se encuentran `config/`, `data/`, `docs/`, `envs/`, `results/`, `scripts/`, `tests/`, `visualizar/` y `workflow/`, además del `Snakefile` y archivos README complementarios.
 
 De manera resumida:
 
@@ -105,14 +105,14 @@ De manera resumida:
 - `scripts/`: scripts de procesamiento, incluyendo refactorizaciones headless y traducciones R → Python;
 - `tests/`: pruebas unitarias e integración;
 - `workflow/`: reglas de Snakemake y logs;
-- `visualizar/`: ensamblaje cartográfico y proyectos QGIS. :contentReference[oaicite:3]{index=3}
+- `visualizar/`: ensamblaje cartográfico y proyectos QGIS.
 
 ## 7. Organización actual de scripts
 
 Actualmente el proyecto contiene, dentro de `scripts/`, dos subcarpetas de trabajo principales:
 
 - `headless-qgis/`
-- `headless-r2py/` :contentReference[oaicite:4]{index=4}
+- `headless-r2py/`
 
 Estas carpetas responden a la historia reciente de refactorización del proyecto:
 
@@ -136,7 +136,7 @@ La documentación se distribuye en distintos niveles:
 - **README-headless.md**: criterios técnicos de desarrollo y ejecución sin GUI;
 - **docs/bitacora.csv**: registro cronológico compacto de cambios técnicos;
 - **docs/criterios-validacion.md**: reglas y criterios de validación;
-- **docs/operacion-snakemake.md**: instrucciones de operación del workflow. :contentReference[oaicite:5]{index=5}
+- **docs/operacion-snakemake.md**: instrucciones de operación del workflow.
 
 ## 9. Bitácora técnica
 
@@ -174,7 +174,7 @@ La ejecución reproducible del proyecto se articula mediante **Snakemake**, con 
 - `Snakefile`
 - `workflow/rules/*.smk`
 - `config/config.yaml`
-- `docs/operacion-snakemake.md` :contentReference[oaicite:6]{index=6}
+- `docs/operacion-snakemake.md`
 
 La meta es que cada etapa del procesamiento quede explícitamente definida en términos de:
 
@@ -192,7 +192,7 @@ El proyecto incorpora una capa de validación formal con `pytest`, pensada para 
 - pruebas de integración sobre datos pequeños;
 - verificaciones mínimas end-to-end de productos clave.
 
-La carpeta `tests/` ya está contemplada para esta función, aunque su contenido aún está en fase de consolidación. :contentReference[oaicite:7]{index=7}
+La carpeta `tests/` ya está contemplada para esta función, aunque su contenido aún está en fase de consolidación.
 
 ## 12. Ensamblaje cartográfico y salidas visuales
 
@@ -202,7 +202,7 @@ La carpeta `visualizar/` se concibe como la capa de ensamblaje final para revisi
 - construir proyectos QGIS listos para abrir en GUI;
 - aplicar estilos (`qml/`);
 - definir plantillas de salida;
-- preparar exportaciones presentables en PNG, PDF o SVG. :contentReference[oaicite:8]{index=8}
+- preparar exportaciones presentables en PNG, PDF o SVG.
 
 En este diseño, el procesamiento analítico sigue siendo headless y automatizable, mientras que la construcción de productos de presentación se resuelve en una capa separada y explícita.
 
