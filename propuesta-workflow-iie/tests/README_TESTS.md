@@ -4,7 +4,7 @@ Esta guía establece el estándar para las pruebas de nuestros scripts de proces
 
 Podría parecer que una estrategia formal de *testing* es simplemente una tarea extra que quita tiempo y que hacemos por moda o lucimiento. En realidad es el **seguro de vida** del desarrollo. El proyecto que estamos abordando es complejo y desafiante. Es a la vez una oportunidad de aprendizaje y la oportunidad de producir un resultado de gran trascendencia. La ayuda que recursos como Pytest nos ofrecen es bienvenida. 
 
-En la sección 6 de este README se ofrecen algunos argumentos adicionales para apreciar los beneficios y comprender su relevancia. El *testing* es una herramienta de diseño. Un código que es fácil de poner a prueba es, por definición, un código bien escrito: modular, claro y desacoplado. Al adoptar `Pytest`, no solo estamos validando datos geoespaciales; nos estamos comprometiendo con nuestras capacidades hacia la sabiduía de la ingeniería de software.
+En la sección 6 de este README se ofrecen algunos argumentos adicionales para apreciar los beneficios y comprender su relevancia. El *testing* es una herramienta de diseño. Un código que es fácil de poner a prueba es, por definición, un código bien escrito: modular, claro y desacoplado. Al adoptar `Pytest`, no solo estamos validando datos geoespaciales; nos estamos comprometiendo con nuestras capacidades hacia la sabiduría de la ingeniería de software.
 
 <br> 
 
