@@ -2,7 +2,7 @@
 
 Esta guía establece el estándar para las pruebas de nuestros scripts de procesamiento geoespacial.
 
-Podría parecer que una estrategia formal de *testing* es simplemente una tarea extra que quita tiempo y que hacemos por moda o lucimiento. En realidad es el **seguro de vida** del desarrollo. El proyecto que estamos abordando es complejo y desafiante. Es a la ves una oportunidad de aprendizaje y la oportunidad de producir un resultado de gran trascendencia. La ayuda que recursos como Pytest nos ofrecen es bienvenida. 
+Podría parecer que una estrategia formal de *testing* es simplemente una tarea extra que quita tiempo y que hacemos por moda o lucimiento. En realidad es el **seguro de vida** del desarrollo. El proyecto que estamos abordando es complejo y desafiante. Es a la vez una oportunidad de aprendizaje y la oportunidad de producir un resultado de gran trascendencia. La ayuda que recursos como Pytest nos ofrecen es bienvenida. 
 
 En la sección 6 de este README se ofrecen algunos argumentos adicionales para apreciar los beneficios y comprender su relevancia. El *testing* es una herramienta de diseño. Un código que es fácil de poner a prueba es, por definición, un código bien escrito: modular, claro y desacoplado. Al adoptar `Pytest`, no solo estamos validando datos geoespaciales; nos estamos comprometiendo con nuestras capacidades hacia la sabiduía de la ingeniería de software.
 
@@ -61,6 +61,35 @@ def test_build_valid_mask():
     assert resultado[1, 0] == False
 ```
  
+
+##### Probando GDAL
+> 
+> A diferencia de las funciones puras, las funciones que usan `gdal.Warp` o `gdal.Open` no devuelven datos fáciles de leer (devuelven punteros de C++). En estos casos, nuestro objetivo con `Pytest` es:
+> 
+> 1.  **Aislar la librería:** No queremos que el test falle porque a GDAL le falta una DLL o un archivo TIFF.
+> 2.  **Verificar el "Contrato":** En `test_warp_to_template`, lo que realmente ponemos a prueba es que nuestro script le pase a GDAL las coordenadas de la plantilla correctas. Si las coordenadas están bien, confiamos en que GDAL hará su trabajo (¡los desarrolladores habrán hecho sus pruebas!).
+> 
+Si corro pytest con estos dos paquetes de prueba montados obtengo algo así:
+> 
+```diff
+ (C:\QGis_env) PS C:\Users\equih\0 Versiones\workflow-iie\propuesta-workflow-iie> pytest
+ ==================================== test session starts ========================================
+ platform win32 -- Python 3.11.15, pytest-9.0.3, pluggy-1.6.0
+ rootdir: C:\Users\equih\0 Versiones\workflow-iie\propuesta-workflow-iie
+ configfile: pyproject.toml
+ testpaths: tests
+ collected 4 items
+ 
++tests\test_crear_csv.py ..                                                                 [ 50%]
++tests\test_zonas_vida.py ..                                                                [100%]
+ 
++==================================== 4 passed in 1.25s ==========================================
+ 
+```
+
+
+
+##### El enfoque
 
 En el proceso de integración del producto final seguimos una lógica secuencial que queda muy bien descrita en esta [pirámide del testing](https://sketchingdev.co.uk/sketchnotes/testing-pyramid.html). Nos sugiere que conviene hacer muchas pruebas de los componentes elementales y progresivamente menos de los que integran partes y muchos menos del comportamiento total del script o del workflow completo .
 
@@ -150,23 +179,26 @@ En nuestro flujo de trabajo, Pytest pone a prueba **unidades mínimas de verdad*
 Si todas las piezas pequeñas son sólidas, el workflow completo será indestructible.
 
 
-#### 4. ¿Cómo profundizar? (Ruta de aprendizaje)
+### 7. ¿Cómo profundizar? (Ruta de aprendizaje)
 
 **Pytest** es un ecosistema profundo. No esperamos que lo domines hoy, pero estos recursos son el mapa para cuando necesites escalar tus pruebas:
 
 * **Integración con PyCharm (si te decidiste a usarlo):** PyCharm facilita el *testing* enormemente. 
+* 
     * Ve a *Settings > Tools > Python Integrated Tools* y selecciona **pytest** como el "Default test runner". 
     * Esto te permitirá ver iconos de "Play" verdes al lado de cada función `test_`. Al hacer clic, verás los resultados en una ventana organizada en la parte inferior.
+    * PyCharm tiene "Coverage Tool". Es una herramienta que pinta de verde las líneas de los scripts que ya han sido "visitadas" por un test, es una ayuda visual inmediata para verificar progreso.
+    
 * **Documentación Oficial ([docs.pytest.org](https://docs.pytest.org/)):** Es la fuente definitiva. Si tienes duda sobre cómo usar una función específica de `pytest`, busca aquí primero.
 * **Libro "Python Testing with pytest" (Brian Okken):** Es la referencia más clara que existe sobre el tema. Explica desde lo más básico hasta cómo manejar bases de datos en los tests.
 * **Canal de YouTube "ArjanCodes":** Tiene vídeos excelentes sobre cómo estructurar código para que sea fácil de probar (arquitectura de software).
 
 
-#### 5. Consejos para quién está iniciando:
+### 8. Consejos para quién está iniciando:
 
 1.  **No le tengas miedo al rojo:** Ver un `FAILED` en la terminal no es un fracaso, es Pytest avisándote de un error *antes* de que lo vea el cliente o el jefe. El rojo es tu amigo.
 2.  **Escribe el test mientras programas:** No lo dejes para el final. Si escribes la prueba al mismo tiempo que la función, diseñarás código más limpio y modular (porque el código "enredado" es muy difícil de testear).
-3.  **Simular no es engañar:** Usar Mocks es necesario. No queremos procesar 2GB de datos para saber si una suma funciona. Nos ayuda a ser eficientes y prepararnos para enfrentar los daros reales.
+3.  **Simular no es engañar:** Usar Mocks es necesario. No queremos procesar 2GB de datos para saber si una suma funciona. Nos ayuda a ser eficientes y prepararnos para enfrentar los datos reales.
 
 
 ##### Visualiza el flujo conceptual
@@ -177,5 +209,5 @@ Si todas las piezas pequeñas son sólidas, el workflow completo será indestruc
 
 ##### Tips para aspectos geoespaciales
 
-* **Validación de coordenadas:** Usa `np.isclose()` en lugar de `==` para comparar coordenadas (evita conflicros por decimales del punto flotante).
+* **Validación de coordenadas:** Usa `np.isclose()` en lugar de `==` para comparar coordenadas (evita conflictos por decimales del punto flotante).
 * **Tipos de datos:** Si una librería (como `Rasterio`) pide un tipo específico, asegúrate de que tu Mock devuelva un objeto real de esa misma y exacta  clase.
