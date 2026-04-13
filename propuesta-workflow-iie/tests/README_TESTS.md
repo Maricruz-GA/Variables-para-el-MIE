@@ -72,7 +72,7 @@ def test_build_valid_mask():
 Si corro pytest con estos dos paquetes de prueba montados obtengo algo así:
 > 
 ```diff
- (C:\QGis_env) PS C:\Users\equih\0 Versiones\workflow-iie\propuesta-workflow-iie> pytest
+ 
  ==================================== test session starts ========================================
  platform win32 -- Python 3.11.15, pytest-9.0.3, pluggy-1.6.0
  rootdir: C:\Users\equih\0 Versiones\workflow-iie\propuesta-workflow-iie
