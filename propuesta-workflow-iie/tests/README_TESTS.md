@@ -64,7 +64,7 @@ def test_build_valid_mask():
 
 En el proceso de integración del producto final seguimos una lógica secuencial que queda muy bien descrita en esta. Nos sugiere que conviene hacer muchas pruebas de los componentes elementales y progresivamente menos de los que integran partes y muchos menos del comportamiento total del script o del workflow completo.
 
-![pirámide de la verificación](https://sketchingdev.co.uk/assets/images/sketchnotes/2021-07-12-testing-pyramid/testing-pyramid.jpg){width=400 fig-align="center"}
+<img src="https://sketchingdev.co.uk/assets/images/sketchnotes/2021-07-12-testing-pyramid/testing-pyramid.jpg" width="300" fig-align="center">
 
 
 ### 2. El Patrón AAA (Arrange, Act, Assert)
