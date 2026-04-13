@@ -170,7 +170,7 @@ Programar sin tests es como construir un edificio y esperar que no se caiga porq
 
 #### c) El concepto de "Unidad"
 
-En nuestro flujo de trabajo, Pytest pone a prueba **unidades mínimas de verdad** (es la colección de `assert` en módulo de prueba):
+En nuestro flujo de trabajo, Pytest pone a prueba **unidades mínimas de verdad** (es la colección de `assert` en el módulo de prueba):
 
 * No probamos "todo el workflow" de una vez (eso es muy pesado).
 * Probamos si la función que genera la máscara lo hace bien.
