@@ -1,7 +1,50 @@
 {
-    "name": "workflow-iie",
+    "name": "propuesta-workflow-iie",
     "type": "directory",
     "children": [
+        {
+            "name": ".pytest_cache",
+            "type": "directory",
+            "children": [
+                {
+                    "name": ".gitignore",
+                    "type": "file",
+                    "size_bytes": 39
+                },
+                {
+                    "name": "CACHEDIR.TAG",
+                    "type": "file",
+                    "size_bytes": 191
+                },
+                {
+                    "name": "README.md",
+                    "type": "file",
+                    "size_bytes": 310
+                },
+                {
+                    "name": "v",
+                    "type": "directory",
+                    "children": [
+                        {
+                            "name": "cache",
+                            "type": "directory",
+                            "children": [
+                                {
+                                    "name": "lastfailed",
+                                    "type": "file",
+                                    "size_bytes": 2
+                                },
+                                {
+                                    "name": "nodeids",
+                                    "type": "file",
+                                    "size_bytes": 396
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
         {
             "name": ".Rhistory",
             "type": "file",
@@ -56,7 +99,7 @@
                 {
                     "name": "bitacora.csv",
                     "type": "file",
-                    "size_bytes": 10928
+                    "size_bytes": 12683
                 },
                 {
                     "name": "criterios-validacion.md",
@@ -67,6 +110,17 @@
                     "name": "operacion-snakemake.md",
                     "type": "file",
                     "size_bytes": 804
+                },
+                {
+                    "name": "prepara-python",
+                    "type": "directory",
+                    "children": [
+                        {
+                            "name": "environment-qgis_env.yml",
+                            "type": "file",
+                            "size_bytes": 265
+                        }
+                    ]
                 }
             ]
         },
@@ -82,6 +136,11 @@
             ]
         },
         {
+            "name": "pyproject.toml",
+            "type": "file",
+            "size_bytes": 195
+        },
+        {
             "name": "README-headless.md",
             "type": "file",
             "size_bytes": 1615
@@ -89,7 +148,7 @@
         {
             "name": "README.md",
             "type": "file",
-            "size_bytes": 12024
+            "size_bytes": 11720
         },
         {
             "name": "results",
@@ -122,7 +181,7 @@
             "type": "directory",
             "children": [
                 {
-                    "name": "headless-qgis",
+                    "name": "headless_qgis",
                     "type": "directory",
                     "children": [
                         {
@@ -151,43 +210,48 @@
                             "size_bytes": 15994
                         },
                         {
-                            "name": "zonas-de-vida-headless.py",
+                            "name": "zonas_de_vida_headless.py",
                             "type": "file",
-                            "size_bytes": 7043
+                            "size_bytes": 7045
+                        },
+                        {
+                            "name": "__init__.py",
+                            "type": "file",
+                            "size_bytes": 0
                         }
                     ]
                 },
                 {
-                    "name": "headless-r2py",
+                    "name": "headless_r2py",
                     "type": "directory",
                     "children": [
                         {
-                            "name": "1_crear_csv_reg_tifs.py",
+                            "name": "s1_crear_csv_reg_tifs.py",
                             "type": "file",
                             "size_bytes": 6300
                         },
                         {
-                            "name": "2_tasas_de_erosion.py",
+                            "name": "s2_tasas_de_erosion.py",
                             "type": "file",
                             "size_bytes": 6646
                         },
                         {
-                            "name": "3_no_na_y_division.py",
+                            "name": "s3_no_na_y_division.py",
                             "type": "file",
                             "size_bytes": 4436
                         },
                         {
-                            "name": "4_leyenda.py",
+                            "name": "s4_leyenda.py",
                             "type": "file",
                             "size_bytes": 5110
                         },
                         {
-                            "name": "5_batimetria.py",
+                            "name": "s5_batimetria.py",
                             "type": "file",
                             "size_bytes": 6955
                         },
                         {
-                            "name": "6_add_dist_estruct.py",
+                            "name": "s6_add_dist_estruct.py",
                             "type": "file",
                             "size_bytes": 6801
                         },
@@ -195,6 +259,11 @@
                             "name": "tipo_sedim.py",
                             "type": "file",
                             "size_bytes": 4988
+                        },
+                        {
+                            "name": "__init__.py",
+                            "type": "file",
+                            "size_bytes": 0
                         }
                     ]
                 },
@@ -220,39 +289,24 @@
             "type": "directory",
             "children": [
                 {
-                    "name": "conftest.py",
+                    "name": "README_TESTS.md",
                     "type": "file",
-                    "size_bytes": 0
+                    "size_bytes": 12080
                 },
                 {
-                    "name": "test_batimetria_integration.py",
+                    "name": "test_crear_csv.py",
                     "type": "file",
-                    "size_bytes": 0
+                    "size_bytes": 2939
                 },
                 {
-                    "name": "test_erosion_integration.py",
+                    "name": "test_zonas_vida",
                     "type": "file",
-                    "size_bytes": 0
+                    "size_bytes": 4830
                 },
                 {
-                    "name": "test_huracanes_integration.py",
+                    "name": "test_zonas_vida.py",
                     "type": "file",
-                    "size_bytes": 0
-                },
-                {
-                    "name": "test_rastee_utils.py",
-                    "type": "file",
-                    "size_bytes": 0
-                },
-                {
-                    "name": "test_vecror_utils.py",
-                    "type": "file",
-                    "size_bytes": 0
-                },
-                {
-                    "name": "test_zonas_vida_integration.py",
-                    "type": "file",
-                    "size_bytes": 0
+                    "size_bytes": 2605
                 }
             ]
         },
