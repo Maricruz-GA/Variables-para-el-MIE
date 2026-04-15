@@ -15,7 +15,7 @@ regiones <- unique(dat$regionId)
 head(dat)
 
 # Lee datos ei salida Netica
-datos_ei_file <- paste0(dropbox_dir, "/BN-results/EII-data/cei_final_ei_expected_port_5_equal_2026.csv")
+datos_ei_file <- paste0(dropbox_dir, "/BN-results/EII-data/cei_final_ie_expected_port_5_equal_2026.csv")
 eipred <- fread(datos_ei_file, data.table = FALSE)
 min(as.numeric(unlist(eipred)))
 max(as.numeric(unlist(eipred)))
@@ -61,7 +61,7 @@ for (i in 1:length(regiones)){
     ei_rast <- rast(ei_df, type="xyz", digits = 5)
     crs(ei_rast) <- crs(corales)
     ei_map_dir <- paste0(dropbox_dir, "/BN-results/BN_maps/cei_final_ie_expected_port_5_equal_2026/R/")
-    output <- paste0(ei_map_dir,region,".tif")
+    output <- paste0(ei_map_dir, "eicoastal_", region,".tif")
     writeRaster(filename = output, x = ei_rast, overwrite=TRUE)
 }
 
