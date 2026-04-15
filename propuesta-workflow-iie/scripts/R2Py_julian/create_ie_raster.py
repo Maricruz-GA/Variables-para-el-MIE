@@ -16,7 +16,7 @@ DROPBOX_DIR = Path(r"C:/Users/equih/1 Nubes/Dropbox/ei-coastal/")
 TRAINING_TABLE = DROPBOX_DIR / "data" / "cei_final_train_v1ask.csv"
 IE_PREDICTIONS_CSV = DROPBOX_DIR / "BN-results" / "EII-data" / "cei_final_ie_expected_port_5_equal_2026.csv"
 REF_GRID_DIR = DROPBOX_DIR / "data" / "data_crude" / "DunasCost250116_malla_ref_50m"
-OUTPUT_DIR = DROPBOX_DIR / "BN-results" / "BN_maps" / "cei_final_ie_expected_port_5_equal_2026"
+OUTPUT_DIR = DROPBOX_DIR / "BN-results" / "BN_maps" / "cei_final_ie_expected_port_5_equal_2026/Python"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 SOURCE_CRS = "EPSG:4326"

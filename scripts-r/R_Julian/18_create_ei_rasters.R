@@ -14,17 +14,20 @@ dat$idx <- 1:nrow(dat)
 regiones <- unique(dat$regionId)
 head(dat)
 
-# Lee datos ie salida Netica
-datos_ie_file <- paste0(dropbox_dir, "/BN-results/EII-data/cei_final_ie_expected_port_5_equal_2026.csv")
-eipred <- fread(datos_ie_file, data.table = FALSE)
+# Lee datos ei salida Netica
+datos_ei_file <- paste0(dropbox_dir, "/BN-results/EII-data/cei_final_ei_expected_port_5_equal_2026.csv")
+eipred <- fread(datos_ei_file, data.table = FALSE)
 min(as.numeric(unlist(eipred)))
 max(as.numeric(unlist(eipred)))
 
 # eipred <- (as.numeric(unlist(eipred))-1.5)/(5.5-1.5)
 eipred_norm <- eipred %>%
-  mutate(ie_norm = (`E[ei_qnint_map]` - 1.5) / (5.5 - 1.5)) %>%
-  select(ie_norm) %>%
+  mutate(ei_norm = (`E[ei_qnint_map]` - 1.5) / (5.5 - 1.5)) %>%
+  select(ei_norm) %>%
   unlist(use.names = FALSE)
+
+# Suponiendo dat y eipred_norm son idénticos en longitudy orden
+dat$ei_norm <- eipred_norm
 
 hist(eipred_norm)
 # Load corales shapefile.
@@ -45,9 +48,9 @@ for (i in 1:length(regiones)){
     region <- regiones[i]
     print(region)
     
-    region_dat <- dat[dat$regionid.x==region,]
+    region_dat <- dat[dat$regionId==region,]
 
-    ei_df <- data.frame(x=region_dat$x, y=region_dat$y, z=eipred[region_dat$idx])
+    ei_df <- data.frame(x=region_dat$x, y=region_dat$y, z=eipred_norm[region_dat$idx])
     #ei_df <- vect(ei_df, geom=c("x", "y"), crs=crs(corales), keepgeom=FALSE)
     #ei_df <- terra::project(x = ei_df, y = region_)
     
@@ -57,7 +60,8 @@ for (i in 1:length(regiones)){
 
     ei_rast <- rast(ei_df, type="xyz", digits = 5)
     crs(ei_rast) <- crs(corales)
-    output <- paste0("./ei_predictions/1_puerto/eicoastal_",region,".tif")
-    writeRaster(ei_rast, output, overwrite=TRUE)
+    ei_map_dir <- paste0(dropbox_dir, "/BN-results/BN_maps/cei_final_ie_expected_port_5_equal_2026/R/")
+    output <- paste0(ei_map_dir,region,".tif")
+    writeRaster(filename = output, x = ei_rast, overwrite=TRUE)
 }
 
