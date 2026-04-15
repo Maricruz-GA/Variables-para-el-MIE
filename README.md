@@ -1,4 +1,4 @@
-# Flujo de trabajo par integrar el modelo **3T-EII**
+# Flujo de trabajo para integrar el modelo **3T-EII**
 
 Exploración de datos y desarrollo de una estrategia de producción del
 **3T-EII** basada en Python. Incluye la gama completa de tareas para
