@@ -147,8 +147,6 @@ Se añadió un script en Python headless para generar rasters regionales de **IE
 
 Durante la migración se corrigieron problemas de lectura de insumos, correspondencia entre regiones y mallas de referencia, desajustes de CRS y artefactos espaciales derivados de la asignación directa de puntos reproyectados a la grilla final. La solución adoptada consiste en construir primero una grilla fuente en el CRS original de los datos y reproyectarla posteriormente a la plantilla regional con remuestreo por vecino más cercano. El módulo cuenta además con pruebas unitarias en `pytest` para validar su comportamiento básico.
 
-Si quieres, te doy una tercera versión todavía más compacta y más alineada al estilo de README de proyecto.
-
 
 ## 9. Bitácora técnica
 
