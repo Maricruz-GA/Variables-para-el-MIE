@@ -113,11 +113,13 @@ Actualmente el proyecto contiene, dentro de `scripts/`, dos subcarpetas de traba
 
 - `headless-qgis/`
 - `headless-r2py/`
+- `R2Py_julian/`
 
 Estas carpetas responden a la historia reciente de refactorización del proyecto:
 
 - `headless-qgis/` agrupa scripts originalmente asociados a procesos geoespaciales que dependían, en alguna medida, de componentes de PyQGIS o de flujos cercanos a QGIS, y que fueron adaptados a ejecución headless;
 - `headless-r2py/` agrupa scripts traducidos desde R hacia Python, manteniendo su lógica analítica y adaptándolos a una arquitectura reproducible y sin GUI.
+- `R2Py_julian/`  agrupa scripts de Julián traducidos desde R hacia Python, manteniendo su lógica analítica y adaptándolos a una arquitectura reproducible y sin GUI.
 
 Esta separación **es transitoria y organizativa**, no conceptual. Aún debe discutirse con el equipo cómo articular ambos conjuntos, pero la meta es que formen parte de **un solo conjunto coherente de scripts Python**, orquestado mediante Snakemake y documentado bajo criterios comunes.
 
@@ -137,6 +139,14 @@ La documentación se distribuye en distintos niveles:
 - **docs/bitacora.csv**: registro cronológico compacto de cambios técnicos;
 - **docs/criterios-validacion.md**: reglas y criterios de validación;
 - **docs/operacion-snakemake.md**: instrucciones de operación del workflow.
+
+
+## Producción de mapa raster de IIE de la salida de Netica
+
+Se añadió un script en Python headless para generar rasters regionales de **IE** a partir de tablas de entrenamiento, predicciones y mallas de referencia. La implementación reemplaza una versión previa en R y utiliza `pandas`, `numpy` y `rasterio` para construir salidas GeoTIFF reproducibles y aptas para integración en flujos automatizados.
+
+Durante la migración se corrigieron problemas de lectura de insumos, correspondencia entre regiones y mallas de referencia, desajustes de CRS y artefactos espaciales derivados de la asignación directa de puntos reproyectados a la grilla final. La solución adoptada consiste en construir primero una grilla fuente en el CRS original de los datos y reproyectarla posteriormente a la plantilla regional con remuestreo por vecino más cercano. El módulo cuenta además con pruebas unitarias en `pytest` para validar su comportamiento básico.
+
 
 ## 9. Bitácora técnica
 
