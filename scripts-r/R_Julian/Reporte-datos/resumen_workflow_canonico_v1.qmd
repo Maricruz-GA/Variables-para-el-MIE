@@ -1,0 +1,302 @@
+---
+title: "Hallazgos y propuesta canónica tentativa"
+format:
+  html:
+    toc: false
+    theme: cosmo
+    self-contained: false
+lang: es
+---
+
+<style>
+.inline-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin: 1rem 0 1.25rem 0;
+}
+.inline-actions a {
+  display: inline-block;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid #cfd7df;
+  border-radius: 0.65rem;
+  text-decoration: none;
+  background: #f8fafc;
+}
+.inline-actions a:hover {
+  background: #eef4f8;
+}
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  display: none;
+  z-index: 9999;
+  padding: 2rem;
+}
+.modal:target {
+  display: block;
+}
+.modal-card {
+  background: white;
+  color: #1f2937;
+  max-width: 1100px;
+  max-height: 88vh;
+  margin: 0 auto;
+  overflow: auto;
+  border-radius: 1rem;
+  padding: 1.25rem 1.25rem 1rem 1.25rem;
+  box-shadow: 0 20px 60px rgba(0,0,0,.25);
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+.modal-header a {
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.compact-note p {
+  margin-bottom: 0.7rem;
+}
+pre.tree {
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 1rem;
+  border-radius: 0.85rem;
+  overflow-x: auto;
+  font-size: 0.92rem;
+}
+.small-links {
+  font-size: 0.92rem;
+  margin-top: 0.9rem;
+}
+</style>
+
+<div class="compact-note">
+
+Hallazgo principal: el análisis de scripts permitió pasar de una lista de rutas a una vista de **familias operativas de archivos**. Con eso ya se distinguen etapas claras del flujo: base espacial/regional, cálculo de features, tablas de entrenamiento y generación de mapas.
+
+Se detectó una familia claramente troncal: **`data/06_DunasCost250116_malla_ref_50m`**, que alimenta muchos scripts. También emergen como etapas posteriores **`data_features`** y **`data_training_tables`**. Además apareció una posible inconsistencia de nomenclatura entre **`data/7_ref_grid_50m`** y **`data/8_ref_grid_50m`**, que probablemente representan la misma familia operativa y conviene validar directamente.
+
+Propuesta canónica tentativa: reorganizar por etapas del workflow y no por herencia histórica de carpetas. En términos generales: **`data_raw/`** para insumos fuente, **`data_intermediate/grids/`** para moldes o grillas base regionales, **`data_intermediate/features/`** para capas derivadas, **`data_intermediate/training_tables/`** para tablas de modelado y **`outputs/maps/`** para resultados cartográficos.
+
+</div>
+
+<div class="inline-actions">
+  <a href="#grafo-modal">Ver grafo</a>
+  <a href="#arbol-modal">Ver árbol de carpetas</a>
+  <a href="workflow_familias_globales_v1_0.json">Ver JSON consolidado</a>
+</div>
+
+<div class="small-links">
+Archivos de apoyo: <a href="workflow_grafo_v1_0.json">grafo JSON</a>, <a href="workflow_grafo_v1_0.mmd">grafo Mermaid</a>, <a href="arbol_canonico_tentativo_v1.md">árbol en Markdown</a>, <a href="r_script_paths_manifest_v0_6.json">manifest v0.6</a>.
+</div>
+
+<div id="grafo-modal" class="modal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <strong>Grafo simplificado familia ↔ script</strong>
+      <a href="#">Cerrar</a>
+    </div>
+
+<pre class="mermaid">
+flowchart LR
+    F001("data/5_deltavp250m")
+    F002("data/6_inegiSVII_dunes")
+    F003("data_crude/02_cm-conabio")
+    F004("data/7_dunes250116")
+    F005("data/3_misc_cesia")
+    F006("data_features")
+    F007("data/06_DunasCost250116_malla_ref_50m\n[\\.tif$]")
+    F008("data_crude/12_Tipo_de_costa")
+    F009("data/06_DunasCost250116_malla_ref_50m")
+    F010("data_crude/11_dataset-sis-biodiversity-era5-global")
+    F011("data_crude/05_InventarioEstructuras")
+    F012("data_crude/07_zvh_mx3gw")
+    F013("data_features\n[\\.rds$]")
+    F014("data_training_tables")
+    F015("C:/Users/equih/1 Nubes/Dropbox/ei-coastal/data/data_crude/DunasCost250116_malla_ref_50m\n[\\.tif$]")
+    F016("C:/Users/equih/1 Nubes/Dropbox/ei-coastal/BN-results/BN_maps/cei_final_ie_expected_port_5_equal_2026/R")
+    F017("C:/Users/equih/1 Nubes/Dropbox/ei-coastal/data/data_crude/08_Corales")
+    F018("C:/Users/equih/1 Nubes/Dropbox/ei-coastal/data/data_crude/DunasCost250116_malla_ref_50m")
+    F019("C:/Users/equih/1 Nubes/Dropbox/ei-coastal/data")
+    F020("C:/Users/equih/1 Nubes/Dropbox/ei-coastal/BN-results/EII-data")
+    F021("data/7_ref_grid_50m")
+    F022("data/8_ref_grid_50m")
+    F023("data_crude/04_Erosion_acresion")
+    F024("data_crude/15_plantas_snib")
+    F025("data_crude/08_coral-global")
+    F026("data_crude/03_seagrasses-pol-simar")
+    F027("data_crude/13_Batimetría")
+    F028("data_crude/16_madmex")
+    S__10_movimiento_dunas_R["10_movimiento_dunas.R"]
+    S__11_tipo_costa_R["11_tipo_costa.R"]
+    S__12_wind_speed_R["12_wind_speed.R"]
+    S__13_z_v_holdridge_R["13_z_v_holdridge.R"]
+    S__14_create_data_table_R["14_create_data_table.R"]
+    S__15_one_class_ei_R["15_one_class_ei.R"]
+    S__16_final_training_data_v1_R["16_final_training_data_v1.R"]
+    S__17_naive_bayes_ei_R["17_naive_bayes_ei.R"]
+    S__18_create_ei_rasters_R["18_create_ei_rasters.R"]
+    S__1_create_reference_grid_R["1_create_reference_grid.R"]
+    S__1_create_reference_grid2_R["1_create_reference_grid2.R"]
+    S__1_features_tasa_erosion_R["1_features_tasa_erosion.R"]
+    S__2_features_estructuras_R["2_features_estructuras.R"]
+    S__3_sp_invasoras_R["3_sp_invasoras.R"]
+    S__4_corales_global_R["4_corales_global.R"]
+    S__5_pasto_marino_R["5_pasto_marino.R"]
+    S__6_batimetria_caracteristica_R["6_batimetria_caracteristica.R"]
+    S__7_inegi_uso_suelo_R["7_inegi_uso_suelo.R"]
+    S__7_madmex_uso_suelo_R["7_madmex_uso_suelo.R"]
+    S__7_madmex_uso_suelo_2_R["7_madmex_uso_suelo_2.R"]
+    S__7_madmex_uso_suelo_3_R["7_madmex_uso_suelo_3.R"]
+    S__8_manglares_R["8_manglares.R"]
+    S__9_condicion_dunas_R["9_condicion_dunas.R"]
+    F001 --> S__10_movimiento_dunas_R
+    F002 --> S__10_movimiento_dunas_R
+    F003 --> S__10_movimiento_dunas_R
+    F004 --> S__10_movimiento_dunas_R
+    F005 --> S__10_movimiento_dunas_R
+    S__10_movimiento_dunas_R --> F006
+    F007 --> S__11_tipo_costa_R
+    F008 --> S__11_tipo_costa_R
+    F009 --> S__11_tipo_costa_R
+    S__11_tipo_costa_R --> F006
+    F007 --> S__12_wind_speed_R
+    F009 --> S__12_wind_speed_R
+    F010 --> S__12_wind_speed_R
+    F011 --> S__12_wind_speed_R
+    S__12_wind_speed_R --> F006
+    F003 --> S__13_z_v_holdridge_R
+    F007 --> S__13_z_v_holdridge_R
+    F009 --> S__13_z_v_holdridge_R
+    F012 --> S__13_z_v_holdridge_R
+    S__13_z_v_holdridge_R --> F006
+    F006 --> S__14_create_data_table_R
+    F013 --> S__14_create_data_table_R
+    S__14_create_data_table_R --> F014
+    F014 --> S__15_one_class_ei_R
+    S__15_one_class_ei_R --> F014
+    F014 --> S__16_final_training_data_v1_R
+    F014 --> S__17_naive_bayes_ei_R
+    S__17_naive_bayes_ei_R --> F014
+    F015 --> S__18_create_ei_rasters_R
+    F017 --> S__18_create_ei_rasters_R
+    F018 --> S__18_create_ei_rasters_R
+    F019 --> S__18_create_ei_rasters_R
+    F020 --> S__18_create_ei_rasters_R
+    S__18_create_ei_rasters_R --> F016
+    F002 --> S__1_create_reference_grid_R
+    F005 --> S__1_create_reference_grid_R
+    S__1_create_reference_grid_R --> F021
+    F001 --> S__1_create_reference_grid2_R
+    F002 --> S__1_create_reference_grid2_R
+    F004 --> S__1_create_reference_grid2_R
+    F005 --> S__1_create_reference_grid2_R
+    S__1_create_reference_grid2_R --> F022
+    F007 --> S__1_features_tasa_erosion_R
+    F009 --> S__1_features_tasa_erosion_R
+    F023 --> S__1_features_tasa_erosion_R
+    S__1_features_tasa_erosion_R --> F006
+    F007 --> S__2_features_estructuras_R
+    F009 --> S__2_features_estructuras_R
+    F011 --> S__2_features_estructuras_R
+    S__2_features_estructuras_R --> F006
+    F007 --> S__3_sp_invasoras_R
+    F009 --> S__3_sp_invasoras_R
+    F024 --> S__3_sp_invasoras_R
+    S__3_sp_invasoras_R --> F006
+    F007 --> S__4_corales_global_R
+    F009 --> S__4_corales_global_R
+    F025 --> S__4_corales_global_R
+    S__4_corales_global_R --> F006
+    F007 --> S__5_pasto_marino_R
+    F009 --> S__5_pasto_marino_R
+    F026 --> S__5_pasto_marino_R
+    S__5_pasto_marino_R --> F006
+    F007 --> S__6_batimetria_caracteristica_R
+    F009 --> S__6_batimetria_caracteristica_R
+    F027 --> S__6_batimetria_caracteristica_R
+    S__6_batimetria_caracteristica_R --> F006
+    F003 --> S__7_inegi_uso_suelo_R
+    F007 --> S__7_inegi_uso_suelo_R
+    F009 --> S__7_inegi_uso_suelo_R
+    F028 --> S__7_inegi_uso_suelo_R
+    S__7_inegi_uso_suelo_R --> F006
+    F007 --> S__7_madmex_uso_suelo_R
+    F009 --> S__7_madmex_uso_suelo_R
+    F028 --> S__7_madmex_uso_suelo_R
+    S__7_madmex_uso_suelo_R --> F006
+    F007 --> S__7_madmex_uso_suelo_2_R
+    F009 --> S__7_madmex_uso_suelo_2_R
+    F028 --> S__7_madmex_uso_suelo_2_R
+    S__7_madmex_uso_suelo_2_R --> F006
+    F007 --> S__7_madmex_uso_suelo_3_R
+    F009 --> S__7_madmex_uso_suelo_3_R
+    F028 --> S__7_madmex_uso_suelo_3_R
+    S__7_madmex_uso_suelo_3_R --> F006
+    F003 --> S__8_manglares_R
+    F007 --> S__8_manglares_R
+    F009 --> S__8_manglares_R
+    S__8_manglares_R --> F006
+    F001 --> S__9_condicion_dunas_R
+    F002 --> S__9_condicion_dunas_R
+    F003 --> S__9_condicion_dunas_R
+    F004 --> S__9_condicion_dunas_R
+    F005 --> S__9_condicion_dunas_R
+    S__9_condicion_dunas_R --> F006
+</pre>
+  </div>
+</div>
+
+<div id="arbol-modal" class="modal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <strong>Árbol canónico tentativo</strong>
+      <a href="#">Cerrar</a>
+    </div>
+<pre class="tree">proyecto/
+├── data_raw/
+│   ├── vectores_base/
+│   ├── rasters_base/
+│   ├── tablas_base/
+│   └── externos_modelado/
+├── data_intermediate/
+│   ├── grids/
+│   │   └── ref_grid_50m_regional/
+│   ├── features/
+│   │   ├── por_script/
+│   │   └── consolidadas/
+│   ├── training_tables/
+│   └── model_inputs/
+├── outputs/
+│   ├── maps/
+│   │   ├── ei/
+│   │   └── otras_salidas_raster/
+│   ├── tables/
+│   └── reports/
+├── scripts/
+│   ├── prep/
+│   ├── features/
+│   ├── training/
+│   ├── inference/
+│   └── utils/
+└── metadata/
+    ├── manifests/
+    ├── dictionaries/
+    └── workflow/</pre>
+
+<p><strong>Alias actuales que conviene validar</strong></p>
+<ul>
+  <li><code>data/06_DunasCost250116_malla_ref_50m</code> → familia troncal de grillas/regiones.</li>
+  <li><code>data/7_ref_grid_50m</code> y <code>data/8_ref_grid_50m</code> → probable misma familia operativa con inconsistencia de nombre.</li>
+  <li><code>data_features</code> → features derivadas consumidas por etapas posteriores.</li>
+  <li><code>data_training_tables</code> → tablas de entrenamiento/modelado.</li>
+  <li><code>BN_maps/.../R</code> → salidas raster/mapas.</li>
+</ul>
+  </div>
+</div>
