@@ -11,15 +11,20 @@ website:
     left:
       - href: index.qmd
         text: Inicio
+        
 #  sidebar:
   page-navigation: true
-
+  
+crossref: 
+  def-title: "Def"
+  def-prefix: "Def"
+  
 format:
   html:
     embed-resources: true
     theme:
       light: cosmo
       dark: darkly
-#    css: styles.css
+    css: styles.css
     toc: true
     lang: es

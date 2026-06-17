@@ -192,35 +192,49 @@ Para que Snakemake funcione de forma automática y ordenada, el repositorio debe
 
 Todo este tutorial se opera mediante terminal conectada al equipo de Octavio. Hay varias formas de conseguir esas terminales. La más directa es con **PowerShell** (🪟 + R [powershell]), pero también puedes usar la **Rstudio** en tu equipo o la de **Rstudio server** que está corriendo directamente en el equipo de Cctavio. En todos los casos el gran misterio es ¿cuál es la **IP** vigente de ese equipo?  Desafortunadamente la **IP** de nuestros equipos en el Inecol no es fija, seguramente cambiará de tiempo en tiempo, pero se mantendrá mientras el equipo no se apague. Para conseguir la dirección actual de la máquina de Octavio dentro del Inecol, puedes usar lo siguiente desde una terminal de **PowerSHell** (ese -4, pide específicamente una **IP** versión 4 que es el tipo que usaremos:
 
+
 ```{webr}
 #| label: get-ip
-#| echo: false
+#| echo: true
 
 ping_result <- system("ping DESKTOP-QLC4OUO  -4", intern = TRUE)
 
 ip_oct <- stringr::str_extract(ping_result, "(?<=desde )(.*?)(?=\\: by)")
 ip_oct <- ip_oct[!is.na(ip_oct)][1]
-cat("\nLa IP actual de octavio-wsl es:", ip_oct, "\n\n")
 
+cat("\nLa IP actual de octavio-wsl es:", ip_oct, "\n")
+cat("ping DESKTOP-QLC4OUO  -4\n\n")
 ```
 
-Para los siguientes pasos puede convenir tener acceso cómodo al disco que usaremos todos, en la máquina de Octavio. Una herramienta para lograr esto es [winscpf](https://winscp.net/). Es una aplicación para Windows que te mostrará, lado a lado, el directorio local y el del servidor que estamos usando. Una vez que lo tengas instalado, te pedirá los datos de conexión La **IP** local de Octavio, tus credenciales y listo. Le das conectar y ya está. 
+
+::: {#def-consigue-ip .definition}
+| Conseguir la IP que necesitas
+ 
+```powershell
+ ping DESKTOP-QLC4OUO -4
+```
+:::
+
+
+
+
+Para los siguientes pasos puede convenir tener acceso cómodo al disco que usaremos todos, en la máquina de Octavio. Una herramienta para lograr esto es [winscpf](https://winscp.net/). Es una aplicación para Windows que te mostrará, lado a lado, el directorio local y el del servidor que estamos usando. Una vez que lo tengas instalado, te pedirá los datos de conexión La **IP** local de Octavio, tus credenciales y listo (@def-consigue-ip). Le das conectar y ya está. 
 
 ![Acceso al disco del servidor de Octavio](../img/WindSCP-inicio.png)
 
 
-Para este tutorial cada miembro del equipo (Octavio, Martha, Maricruz. Pita) trabajará de forma aislada e independiente en su propio directorio asignado dentro del almacenamiento SSD del servidor. Esto garantiza que puedan experimentar, modificar configuraciones y correr la tubería sin interferir con los demás.
+Para este tutorial cada miembro del equipo (Octavio, Martha, Maricruz, Pita, julian) trabajará de forma aislada e independiente en su propio directorio asignado dentro del almacenamiento SSD del servidor. Esto garantiza que puedan experimentar, modificar configuraciones y correr la tubería sin interferir con los demás.
 
 
-Al usar `$USER` los comandos substituirán esa variable automáticamente por el dato de quién inició la terminal (ej. `martha`, `octavio`, `maricruz`, `pita` o `equihuam`). Lo hará en cualquier comando en el que aparezca.
+Al usar `$USER` los comandos substituirán esa variable automáticamente por el dato de quién inició la terminal (ej. `martha`, `octavio`, `maricruz`, `pita`, `julian` o `equihuam`). Lo hará en cualquier comando en el que aparezca.
 
 
 ### Crear directorios desde la terminal.
 
-Abre la pestaña **Terminal** en RStudio y entra a la máquina de Octavio con el protocolo ssh:
+Abre la pestaña **Terminal** en RStudio y entra a la máquina de Octavio (@def-consigue-ip) con el protocolo ssh:
 
 ```bash
-ssh -p 2200 <<tu-user>>@ 10.0.122.35
+ssh -p 2200 <<tu-user>>@10.0.122.35]
 ```
 
 Quizás te diga, ¡cuidado te estas conectando a un equipo que no conoces!, o algo parecido. Si le dices que adelante te pedirá entonces tu clave y si todo va bien, estarás enlazada al equipo de Octavio. Cuando ya estés ahí, ejecuta el siguiente bloque de comandos para construir la estructura base del proyecto:
@@ -273,7 +287,7 @@ Es curioso, pero puedes imaginar que este *mover* es en realidad sólo otro mane
 
 ### Operar desde un proyecto RStudio  
 
-Instalé en el equipo de Octavio a **R** y **RStudio server** (en Linux no hay una aplicación de escritorio como la de Windows). Esto quiere decir que si te quieres ahorrar lo de RaiDrive, bien podrías hacer todo desde le browser. La forma de activar ese **RStudio** es poner en el navegador la misma **IP** que te funcione para el **ssh** seguido de **:8787**, contesta lo que te pregunte (tus credenciales). ¡Listo!, tendrás frente a ti todo lo necesario para operar el flujo de trabajo.
+Instalé en el equipo de Octavio a **R** y **RStudio server** (en Linux no hay una aplicación de escritorio como la de Windows). Esto quiere decir que si te quieres ahorrar lo de RaiDrive, bien podrías hacer todo desde le browser. La forma de activar ese **RStudio** es poner en el navegador la misma **IP** (@def-consigue-ip) que te funcione para el **ssh** seguido de **:8787**, contesta lo que te pregunte (tus credenciales). ¡Listo!, tendrás frente a ti todo lo necesario para operar el flujo de trabajo.
 
 ![http:// 10.0.122.35:8787](../img/rstudio.png)
 
@@ -346,11 +360,13 @@ Ubicado en la raíz de tu carpeta (`/srv/iie-tutor/$USER-iie/Snakefile`), este a
 
 Este documento lee los resultados espaciales intermedios de la simulación para compilar el HTML final. Guarde el documento de abajo aquí: `reportes/resumen_atributos.qmd`
 
-````{text} 
+:::{.quarto}
+````{text}
 
 {{< include scripts-y-reglas/resumen_atributos.qmdtx >}}
 
-````   
+````
+:::
 
 
 ## 8. Ejecución desde RStudio
@@ -413,7 +429,7 @@ Si quieres monitorear en tiempo real cómo se están comportando los núcleos de
 Este ejemplo es bueno para apreciar la conveniencia de optar por el formato ráster en lugar del vectorial. En casos de datos grandes (grandes espacios y/o alta resolución). Es un error común seguir la intuición de usar un Geopackage vectorial para guardar una colección de datos referidos a una cuadrícula regular. Una colección vectorial de cuadrados regulares guarda 4 coordenadas completas para cada entidad, además de los datos de topología y  metadatos variados. La cobertura de México completa  a una resolución de 250m tendría un peso estimado de ~15 a 30 GB constituida por unos 31 millones de polígonos. En contraste, un Ráster (GeoTIFF) solo guarda el valor del índice del pixel. La posición espacial se infiere por cálculo simple, referido a la matriz que forma la colección de pixeles. Hagamos un script (`4_crear_raster_regional.py`) que aborde la tarea que ya hicimos en vectores, pero que ahora volveremos a hacer en formato ráster.
   
 
-```python
+```{.python}
 {{< include scripts-y-reglas/4_crear_raster_regional.py >}}
 
 ```
@@ -421,16 +437,17 @@ Este ejemplo es bueno para apreciar la conveniencia de optar por el formato rás
 
 Ahora tienes lo necesario para hacer un nuevo reporte basado en los datos ráster. El documento Quarto que te propongo sería así (guardadlo en: `reportes/resumen_nacional.qmd`):
 
-
+:::{.quarto}
 ````{text}
 {{< include scripts-y-reglas/resumen_nacional.qmdtx >}}
 
 ````
+:::
 
 Ahora sólo resta ajustar `snakefile` para incorporar las nuevas capacidades.
 Con esta nueva opción de cómputo en su lugar, hay que regresar al archivo `snakefile` y actualizarlo para incorporar la nueva capacidad y aprovecharla para producir nuevos resultados. Deberá quedar así:
 
-```python
+```{.python}
 {{< include scripts-y-reglas/reglas-paso-2.txt >}}
 
 ```
@@ -512,6 +529,7 @@ Lo que haré es compartir una secuencia de prompts que usé como parte del proce
 
 #### Prompt 0 — Contexto inicial del trabajo
 
+::: {.ai-prompt}
 ```text
 Estoy trabajando en un workflow geoespacial orquestado con Snakemake. Necesito generar proyectos **QGis** reproducibles desde salidas del workflow.
 
@@ -564,10 +582,12 @@ Además:
 - Debe emitir mensajes claros de avance o error.
 - Debe evitar mezclar la lógica `standalone` y `server` cuando puedan mantenerse separadas.
 ```
+:::
 
 Una vez recibido ese *prompt 0* conviene que le especifiques lo siguiente:
 
 
+::: {.ai-prompt}
 ```text
 
 Todo script Python generado o modificado debe iniciar con un encabezado informativo con esta estructura:
@@ -596,6 +616,7 @@ Notas relevantes
 =============================================================================
 """
 ```
+:::
 
 Con esto habrás sentado las bases para todo el proceso de desarrollo. Ahora, con los siguientes prompts, entraremos en materia.
 
@@ -607,7 +628,7 @@ En este caso yo quise considerar el escenario en el que el Workflow me entregar�
 
 
 
-
+::: {.ai-prompt}
 ```text
 Ayúdame a definir dos reglas Snakemake separadas para generar proyectos **QGis**:
 
@@ -636,6 +657,7 @@ Salidas:
 
 Quiero reglas claras, independientes, fáciles de forzar con Snakemake, y comandos de prueba para ejecutar cada una por separado.
 ```
+:::
 
 Las reglas que te proponga la **AI** ponlas al final de archivo snakefile. 
 
@@ -647,15 +669,15 @@ Ahora vamos a abordar el desarrollo del script 5. Imaginé que debería dejar la
 
 La plantilla que hice a mi gusto la puedes descargar y arreglar según tu preferencia. Ponla en `plantillas/`, en la *estructura canónica de directorios*. 
 
-{{< downloadthis  iie-cartografia.qpt >}}
+{{< downloadthis  scripts-y-reglas/iie-cartografia.qpt label="Plantilla" type="success" >}}
 
 Use el logo del Inecol, para que funcione asegúrate de poderlo desplegar en tu diseño. También puedes descargar aquí ese logo.
 
-{{< downloadthis  img/inecol.svg >}}
+{{< downloadthis  scripts-y-reglas/img/inecol.svg label="Logo Inecol" type="warning" >}}
 
 Finalmente, quiero tener la libertad de escoger como se llamará el resultado y algo para indicarle que tipo de proceso desarrollará. Con todo esto ya claro y preparado, pídele a la **IA** lo siguiente:
 
-
+::: {.ai-prompt}
 ```text
 Construyamos `scripts/5_create_qgis_project.py` por etapas.
 
@@ -680,6 +702,7 @@ Primero quiero una versión mínima que:
 
 No agregues todavía layouts, WMS, WFS ni WCS. Sólo quiero validar carga de capas y escritura del proyecto.
 ```
+:::
 
 Si todo resultó bien, ahora tienes una propuesta de script 5 en proceso de desarrollo. Deberás guardarla con el nombre que elegiste en la **carpeta de nuestra estructura canónica: scripts**. Ahora puedes hacer una primera corrida de prueba desde tu **terminal SSH**, deberás estar ubicada en /srv/iie-tutor/$USER-iie.
 
@@ -698,8 +721,10 @@ Lo siguiente es resolver como quieres que se vea el mapa. Básicamente hay que r
 
 #### Prompt 3 — Agregar simbología raster y vectorial
 
+::: {.ai-prompt}
 ```text
-Ahora quiero extender el script Py**QGis** para aplicar simbología reproducible.
+Ahora quiero extender el script Py**QGis** para aplicar 
+simbología reproducible.
 
 Para el raster:
 - usar banda 1;
@@ -726,6 +751,7 @@ Quiero funciones separadas para:
 
 No agregues todavía layouts ni configuración server.
 ```
+:::
 
 Como resultado de esta solicitud te entregará la segunda versión del script. Substituye el que ya tienes en la carpeta por esta nueva versión y prúebalo desde tu consola de **Terminal SSH**. Puedes volver a correrlo con la misma llamada de arriba. Te entregará una nueva versión de `prueba_minima.qgz`. Ábrelo y anota lo que no te guste para buscar resolverlo, no lo modifiques ni lo guardes, para o alterar el proceso de producción mediante script. 
 
@@ -742,6 +768,8 @@ Si la simbología quedó a tu gusto, podemos pasar a construir la solución de p
 
 #### Prompt 4 — Construir variante standalone con layouts
 
+
+::: {.ai-prompt}
 ```text
 Ahora quiero implementar la variante `--target standalone`.
 
@@ -772,6 +800,7 @@ Títulos:
 
 Quiero código modular y que esta lógica sólo corra cuando `--target standalone`.
 ```
+:::
 
 Toma la nueva versión del script y substituye la que tienes. Ahora puedes usar snakemake para probar el funcionamiento. la frase `--force create_projecr_standalone` hace que snakemake corra esa tarea sí o sí. Si le cambiaste de nombre no olvides poner el que usaste realmente. 
 
@@ -782,19 +811,18 @@ snakemake --cores 3 --force create_project_standalone --scheduler greedy
 
 Si todo funciona bien, la tarea correrá el script con los parámetros adecuados y te entregará un proyecto **QGis** completo. Ábrelo y ve que esté a ru gusto. Si hay cosas que quieras ajustar o cambiar toma nota y pídele a la **AI** que te ayude, haz peticiones específicas, e indica de la mejor manera posible como quieres el resultado. Revisión manual en **QGis** Desktop:
 
-```text
-- abre proyecto_standalone.qgz;
-- existen dos layouts;
-- cada layout tiene una página;
-- mapa con escala fija;
-- leyenda correcta;
-- título correcto;
-- capas correctas por layout.
-```
+>- abre proyecto_standalone.qgz;
+>- existen dos layouts;
+>- cada layout tiene una página;
+>- mapa con escala fija;
+>- leyenda correcta;
+>- título correcto;
+>- capas correctas por layout.
 
-Cuando estés satisfecha con el resultado pasa al siguiente producto, que es preparar un proyecto para que actúe como servidor de mapas. Esta versión no requiere tener un diseño de mapas para imprimir. Debe adecuar los metadatos de las capas para que el servidor de mapas las ubique y las haga disponibles a través de la web. Por la forma como configuré el servidor ahora, este mapa debe llamarse forzosamente `proyecto_server.qgz`.
+Cuando estés satisfecha con el resultado pasa al siguiente producto, que es preparar un proyecto para que actúe como servidor de mapas. Esta versión no requiere tener un diseño de mapas para imprimir. Debe adecuar los metadatos de las capas para que el servidor de mapas las ubique y las haga disponibles a través de la web. Por la forma como configuré el servidor ahora, este mapa debe estar forzosamente en resultados, pero tienes para elegir el nombre, pero anótalo, pues tendrás que usarlo para definir la conexión en tu **QGis**. Yo usé este nombre `proyecto_server.qgz`.
 
 
+::: {.ai-prompt}
 #### Prompt 5 — Construir variante server sin layouts
 
 ```text
@@ -830,8 +858,10 @@ Propón una arquitectura donde Py**QGis**:
 3. escriba un proyecto **QGis** válido;
 4. y luego, si hace falta, se parchee el `.qgs` interno del `.qgz` como XML para ajustar rutas y propiedades OGC.
 
-Quiero el código de la variante server integrado en el mismo script, manteniendo separada la lógica `standalone` y `server`.
+Quiero el código de la variante server integrado en el mismo script, 
+manteniendo separada la lógica `standalone` y `server`.
 ```
+:::
 
 Ahora tendrás una nueva versión del script. Nuevamente substituye la que ya tienes. Estas lista para una nueva corrida de prueba, pero ahora la regla que usaras es `create_project_server`:
 
@@ -843,10 +873,12 @@ snakemake --cores 3 --force create_project_server --scheduler greedy
 
 #### Prompt 6 — Pruebas internas del `.qgz`
 
+::: {.ai-prompt}
 ```text
 Ya se generó `resultados/proyecto_server.qgz`.
 
-Ayúdame a inspeccionar el `.qgz` para verificar que el `.qgs` interno contiene:
+Ayúdame a inspeccionar el `.qgz` para verificar que el `.qgs` 
+interno contiene:
 
 - capas con nombres:
   - `iie_mapa_raster`
@@ -865,8 +897,9 @@ Ayúdame a inspeccionar el `.qgz` para verificar que el `.qgs` interno contiene:
 
 Dame comandos `unzip`, `grep` y `sed` para revisar el contenido.
 ```
+:::
 
-Seguramente la **IA** te propondrá algo como lo que me dio a mi. Básicamente es lo necesario para abrir el zip que es el proyecto **qgz** y poderlo analizar. Revisa la especificación de las leyendas y los metadatos necesarios para servir los mapas en la Web:
+Seguramente la **IA** te propondrá algo como lo que me dio a mi. Básicamente es lo necesario para abrir el zip que es el proyecto **qgz** y poderlo analizar. Revisa la especificación de las leyendas y los metadatos necesarios para servir los mapas en la Web, utilizando la tecnología que tiene disponibke **QGis server**:
 
 ```bash
 rm -rf /tmp/qgz_server
@@ -892,7 +925,7 @@ El servir mapas en la Web se hace con la tecnología [**WMS**](https://mapserver
 2. **WFS**. *Web Feature Service* es la opción que entrega datos vectoriales sin las especificaciones de diseño de leyendas.
 3. **WCS**. **Web Coverage Service** es la opción que entrega datos en formato ráster y puede incluir series de tiempo. 
 
-En nuestra configuración, el servidor de mapas está montado en el equipo de Octavio y llegas a él mediante el puerto **8085**. En **QGis**, busca la sección "browser", ahí encontrarás las etiquetas **WMS**, **WFS** y **WCS**. Si das clic con botón derecho del mouse, te dará oportunidad de dar de alta un nuevo enlace del tipo. Entra ahí, elige un nombre para identificar tu conexión y en `URL` anota `http://10.0.90.76:8085/cgi-bin/qgis_mapserv.fcgi`, cambia la **IP** que tenga el equipo de Octavio en este momento. Guarda y verifica el resultado. Deberías ver que la conexión se activa y te ofrece los productos que tu proyecto ha especificado.
+En nuestra configuración, el servidor de mapas está montado en el equipo de Octavio y llegas a él mediante el puerto **8085**. En **QGis**, busca la sección "browser", ahí encontrarás las etiquetas **WMS**, **WFS** y **WCS**. Si das clic con botón derecho del mouse, te dará oportunidad de dar de alta un nuevo enlace del tipo. Entra ahí, elige un nombre para identificar tu conexión y en `URL` anota `http://<<IP-Octavio>>:8085/cgi-bin/qgis_mapserv.fcg?MAP=/data/<<uername>-iie/resultados/proyecto_server.qgz`, cambia la **IP** y el **username**por los datos que correspondan en este momento (@def-consigue-ip). Si usaste otro nombre eb lugar de `proyecto_server.qgz` deberas susstituirlo también. Guarda y verifica el resultado. Deberías ver que la conexión se activa y te ofrece los productos que tu proyecto ha especificado.
 
 
 #### Revisar la entrega de mapas formateados mediante **WMS**
@@ -900,6 +933,7 @@ En nuestra configuración, el servidor de mapas está montado en el equipo de Oc
 Para validar que el proyecto **QGis** Server generado por el script funciona correctamente como WMS busca lo siguiente.
 
 
+::: {.ai-prompt}
 ```text
 
 Asume que el servidor ya está configurado y que el endpoint base es:
@@ -918,34 +952,43 @@ Dame URLs de prueba para:
 
 Usa WMS 1.1.1 en las pruebas `GetMap` con EPSG:4326 para evitar problemas de orden de ejes.
 ```
-
+:::
 
 
 #### Revisar la entrega **WCS**
 
-Ahora busca la sección **WCS**  y verifica que puedes recupera la capa ráster `iie_mapa_raster`. Recuerda que este canal entrega el ráster como cobertura numérica y no como mapa estilizado. Le puedes pedir a la **IA** algo como esto para verificar el resultado.
+Ahora busca la sección **WCS**  y verifica que puedes recupera la capa ráster `iie_mapa_raster`. Recuerda que este canal entrega el ráster como cobertura numérica y no como mapa estilizado. Le puedes pedir a la **IA** algo como esto para verificar el resultado. Recuerda ajustar **IP** y **Usuario**
 
 
+::: {.ai-prompt}
 ```text
 
 Asume endpoint base:
 
-`http://10.0.90.76:8085/cgi-bin/qgis_mapserv.fcgi`
+`http://<<IP-Octavio>>:8085/cgi-bin/qgis_mapserv.fcg?MAP=/data/<<uername>-iie/resultados/proyecto_server.qgz`
 
 Dame pruebas para:
 - `GetCapabilities`;
 - `DescribeCoverage`.
 
 ```
+:::
+
 
 #### Revisar la entrega **WFS** sin recurrir a **QGis GUI**
 
+Para esta capa te sugiero ir a la opción *Layer/Data Source Manager*. Encontré que intentar jalar la capa directamente desde la pestaña browser deja algunos atributos sin definir y la interfaz reporta errores, aunque la cobertura esté bien y sea be ȧn entregada por el servidor. En cambio, por el camino *Data Sourcw Manager* tienes más control y la obtención de los datos fluye de mejor manera. Puedes incluso hacer ahí algo de manejo tipo base de datos **SQL**, que es interesante.
+
+![Data source manager](scripts-y-reglas/img/data-source-manager.png)
+
+
+::: {.ai-prompt}
 ```text
 Quiero validar WFS para la capa vectorial `iie_mapa_vectorial` sin depender de **QGis** GUI.
 
 Asume endpoint base:
 
-`http://10.0.90.76:8085/cgi-bin/qgis_mapserv.fcgi`
+`http://<<IP-Octavio>>:8085/cgi-bin/qgis_mapserv.fcg?MAP=/data/<<uername>-iie/resultados/proyecto_server.qgz`
 
 Datos esperados:
 - capa: `iie_mapa_vectorial`;
@@ -966,11 +1009,12 @@ Dame pruebas con:
 
 También ayúdame a interpretar avisos de orden de ejes en EPSG:4326.
 ```
+:::
 
-Comandos clave:
+Comandos clave (seguramente lo que tendrás que poner en el `curl` deberás ajustarlo a tus condiciines):
 
 ```bash
-curl -s "http://10.0.90.76:8085/cgi-bin/qgis_mapserv.fcgi?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=iie_mapa_vectorial" > /tmp/iie_wfs.gml
+curl -s "http://<<IP-Octavio>>:8085/cgi-bin/qgis_mapserv.fcgi?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=iie_mapa_vectorial" > /tmp/iie_wfs.gml
 
 ls -lh /tmp/iie_wfs.gml
 grep -c "gml:featureMember" /tmp/iie_wfs.gml
@@ -979,7 +1023,7 @@ grep -n "fid" /tmp/iie_wfs.gml | head
 
 ```bash
 ogrinfo -ro \
-  "WFS:http://10.0.90.76:8085/cgi-bin/qgis_mapserv.fcgi?SERVICE=WFS&VERSION=1.0.0" \
+  "WFS:http://<<IP-Octavio>>:8085/cgi-bin/qgis_mapserv.fcgi?SERVICE=WFS&VERSION=1.0.0" \
   iie_mapa_vectorial \
   -so
 ```
@@ -990,6 +1034,8 @@ ogrinfo -ro \
 
 En mi ensayo, encontré varias dificultades para que el *map server* me entregara exactamente lo que yo quería. Puedes tu también intentar abordar algunos de los problemas que me encontré y desde luego los tuyos propios. Así le puedes pedir ayuda a la **IA**.
 
+
+::: {.ai-prompt}
 ```text
 El WFS ya fue validado con `curl` y `ogrinfo`, pero al cargarlo como capa viva en **QGis** Desktop puede aparecer incompleto o mostrar avisos de coordenadas.
 
@@ -1011,13 +1057,15 @@ Quiero recomendaciones para usuarios de **QGis** Desktop:
 - activar Initial GetFeature si está disponible;
 - desactivar restricción por BBOX durante validación.
 ```
-
+:::
 
 
 #### Documentación: preparar README o bitácora
 
 No olvides documentar lo que hiciste. También le puedes pedir ayuda a la **IA** para generar un documento de acompañamiento. No traté aquí nada de la documentación y registro de los matadatos. **Maricruz nos orientará sobre este tema**.
 
+
+::: {.ai-prompt}
 ```text
 
 Ayúdame a redactar una nota técnica final para README o bitácora.
@@ -1049,7 +1097,7 @@ Debe explicar:
 - Salvedad:
   - **QGis** GUI puede cargar inicialmente una capa WFS viva de forma parcial hasta que una consulta, apertura de tabla o exportación fuerza el `GetFeature` completo. Esto se considera comportamiento del cliente **QGis** Desktop, no falla del servicio.
 ```
-
+:::
 
 
 La versión corta para tus usuarios sería:
@@ -1095,7 +1143,5 @@ La arquitectura final separa claramente tres responsabilidades:
 Productos finales:
 - resultados/proyecto_standalone.qgz: proyecto con rutas relativas para **QGis** Desktop.
 - resultados/proyecto_server.qgz: proyecto con rutas /data/... para **QGis** Server en Docker.
-
-
 
 
