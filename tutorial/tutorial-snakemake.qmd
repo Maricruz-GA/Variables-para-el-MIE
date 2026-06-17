@@ -3,8 +3,11 @@ title: "Tutorial de Automatización con Snakemake y RStudio"
 subtitle: "Modelado Geoespacial para la Gestión de la Integridad Ecosistémica"
 author: "Laboratorio de Integridad Ecosistémica"
 date: "2026-05-29"
+
 engine: knitr
 ---
+
+
 
 ## 1. Introducción y Contexto del Proyecto
 
@@ -183,14 +186,14 @@ Para que Snakemake funcione de forma automática y ordenada, el repositorio debe
 
 Todo este tutorial se opera mediante terminal conectada al equipo de Octavio. Hay varias formas de conseguir esas terminales. La más directa es con **PowerShell** (🪟 + R [powershell]), pero también puedes usar la **Rstudio** en tu equipo o la de **Rstudio server** que está corriendo directamente en el equipo de Cctavio. En todos los casos el gran misterio es ¿cuál es la **IP** vigente de ese equipo?  Desafortunadamente la **IP** de nuestros equipos en el Inecol no es fija, seguramente cambiará de tiempo en tiempo, pero se mantendrá mientras el equipo no se apague. Para conseguir la dirección actual de la máquina de Octavio dentro del Inecol, puedes usar lo siguiente desde una terminal de **PowerSHell** (ese -4, pide específicamente una **IP** versión 4 que es el tipo que usaremos:
 
+
 ::: {#def-consigue-ip .definition}
 | Conseguir la IP que necesitas
+ 
 ```powershell
-ping DESKTOP-QLC4OUO -4
+ ping DESKTOP-QLC4OUO -4
 ```
 :::
-
-
 
 Para los siguientes pasos puede convenir tener acceso cómodo al disco que usaremos todos, en la máquina de Octavio. Una herramienta para lograr esto es [winscpf](https://winscp.net/). Es una aplicación para Windows que te mostrará, lado a lado, el directorio local y el del servidor que estamos usando. Una vez que lo tengas instalado, te pedirá los datos de conexión La **IP** local de Octavio, tus credenciales y listo (@def-consigue-ip). Le das conectar y ya está. 
 
@@ -639,15 +642,19 @@ Las reglas que te proponga la **AI** ponlas al final de archivo snakefile.
 
 #### Prompt 2 — Construir script mínimo Py**QGis**
 
-Ahora vamos a abordar el desarrollo del script 5. Imaginé que debería dejar la opción abierta a que los ingredientes del proyecto que construirá puedan ser variables. Eso significa que hay que prever que el script acepte argumentos en donde se especifique eso. Como tenemos un producto vectorial y otro ráster, consideré que habría que prever espacio para canalizar esos dos productos. Estudiando el tema, encontré que es bastante fácil lograr hacer mapas bonitos programáticamente con QGis, si cuento con una plantilla a mi gusto, hecha por mi lado. Eso hice y entonces necesito un parámetro para indicarle en dónde tengo la plantilla que quiero que use.
+Ahora vamos a abordar el desarrollo del script 5. Imaginé que debería dejar la opción abierta a que los ingredientes del proyecto que construirá puedan ser variables. Eso significa que hay que prever que el script acepte argumentos en donde se especifique eso. Como tenemos un producto vectorial y otro ráster, consideré que habría que prever espacio para canalizar esos dos productos. Estudiando el tema, encontré que es bastante fácil lograr hacer mapas bonitos programáticamente con QGis, si cuento con una plantilla a mi gusto, hecha por mi lado. Eso hice y entonces necesito un parámetro para indicarle en dónde tengo la plantilla que quiero que use. Los tamaños usuales de mapas son:
+
+* carta: 21.59 x 27.94
+* doble carta: 27.94 x 43.18
+* A2: 42.0 x 59.4
 
 La plantilla que hice a mi gusto la puedes descargar y arreglar según tu preferencia. Ponla en `plantillas/`, en la *estructura canónica de directorios*. 
 
-{{< downloadthis  scripts-y-reglas/iie-cartografia.qpt >}}
+{{< downloadthis  scripts-y-reglas/iie-cartografia.qpt label="Plantilla" type="success" >}}
 
 Use el logo del Inecol, para que funcione asegúrate de poderlo desplegar en tu diseño. También puedes descargar aquí ese logo.
 
-{{< downloadthis  scripts-y-reglas/img/inecol.svg >}}
+{{< downloadthis  scripts-y-reglas/img/inecol.svg label="Logo Inecol" type="warning" >}}
 
 Finalmente, quiero tener la libertad de escoger como se llamará el resultado y algo para indicarle que tipo de proceso desarrollará. Con todo esto ya claro y preparado, pídele a la **IA** lo siguiente:
 
@@ -899,7 +906,7 @@ El servir mapas en la Web se hace con la tecnología [**WMS**](https://mapserver
 2. **WFS**. *Web Feature Service* es la opción que entrega datos vectoriales sin las especificaciones de diseño de leyendas.
 3. **WCS**. **Web Coverage Service** es la opción que entrega datos en formato ráster y puede incluir series de tiempo. 
 
-En nuestra configuración, el servidor de mapas está montado en el equipo de Octavio y llegas a él mediante el puerto **8085**. En **QGis**, busca la sección "browser", ahí encontrarás las etiquetas **WMS**, **WFS** y **WCS**. Si das clic con botón derecho del mouse, te dará oportunidad de dar de alta un nuevo enlace del tipo. Entra ahí, elige un nombre para identificar tu conexión y en `URL` anota `http://<<IP-Octavio>>:8085/cgi-bin/qgis_mapserv.fcg?MAP=/data/<<uername>-iie/resultados/proyecto_server.qgz&VERSION=1.3.0`, cambia la **IP** y el **username**por los datos que correspondan en este momento (@def-consigue-ip). Si usaste otro nombre eb lugar de `proyecto_server.qgz` deberas susstituirlo también. Guarda y verifica el resultado. Deberías ver que la conexión se activa y te ofrece los productos que tu proyecto ha especificado.
+En nuestra configuración, el servidor de mapas está montado en el equipo de Octavio y llegas a él mediante el puerto **8085**. En **QGis**, busca la sección "browser", ahí encontrarás las etiquetas **WMS**, **WFS** y **WCS**. Si das clic con botón derecho del mouse, te dará oportunidad de dar de alta un nuevo enlace del tipo. Entra ahí, elige un nombre para identificar tu conexión y en `URL` anota `http://<<IP-Octavio>>:8085/cgi-bin/qgis_mapserv.fcg?MAP=/data/<<uername>-iie/resultados/proyecto_server.qgz`, cambia la **IP** y el **username**por los datos que correspondan en este momento (@def-consigue-ip). Si usaste otro nombre eb lugar de `proyecto_server.qgz` deberas susstituirlo también. Guarda y verifica el resultado. Deberías ver que la conexión se activa y te ofrece los productos que tu proyecto ha especificado.
 
 
 #### Revisar la entrega de mapas formateados mediante **WMS**
@@ -931,7 +938,7 @@ Usa WMS 1.1.1 en las pruebas `GetMap` con EPSG:4326 para evitar problemas de ord
 
 #### Revisar la entrega **WCS**
 
-Ahora busca la sección **WCS**  y verifica que puedes recupera la capa ráster `iie_mapa_raster`. Recuerda que este canal entrega el ráster como cobertura numérica y no como mapa estilizado. Le puedes pedir a la **IA** algo como esto para verificar el resultado.
+Ahora busca la sección **WCS**  y verifica que puedes recupera la capa ráster `iie_mapa_raster`. Recuerda que este canal entrega el ráster como cobertura numérica y no como mapa estilizado. Le puedes pedir a la **IA** algo como esto para verificar el resultado. Recuerda ajustar **IP** y **Usuario**
 
 
 ::: {.ai-prompt}
@@ -939,7 +946,7 @@ Ahora busca la sección **WCS**  y verifica que puedes recupera la capa ráster 
 
 Asume endpoint base:
 
-`http://10.0.90.76:8085/cgi-bin/qgis_mapserv.fcgi`
+`http://<<IP-Octavio>>:8085/cgi-bin/qgis_mapserv.fcg?MAP=/data/<<uername>-iie/resultados/proyecto_server.qgz`
 
 Dame pruebas para:
 - `GetCapabilities`;
@@ -951,6 +958,10 @@ Dame pruebas para:
 
 #### Revisar la entrega **WFS** sin recurrir a **QGis GUI**
 
+Para esta capa te sugiero ir a la opción *Layer/Data Source Manager*. Encontré que intentar jalar la capa directamente desde la pestaña browser deja algunos atributos sin definir y la interfaz reporta errores, aunque la cobertura esté bien y sea be ȧn entregada por el servidor. En cambio, por el camino *Data Sourcw Manager* tienes más control y la obtención de los datos fluye de mejor manera. Puedes incluso hacer ahí algo de manejo tipo base de datos **SQL**, que es interesante.
+
+![Data source manager](scripts-y-reglas/img/data-source-manager.png)
+
 
 ::: {.ai-prompt}
 ```text
@@ -958,7 +969,7 @@ Quiero validar WFS para la capa vectorial `iie_mapa_vectorial` sin depender de *
 
 Asume endpoint base:
 
-`http://10.0.90.76:8085/cgi-bin/qgis_mapserv.fcgi`
+`http://<<IP-Octavio>>:8085/cgi-bin/qgis_mapserv.fcg?MAP=/data/<<uername>-iie/resultados/proyecto_server.qgz`
 
 Datos esperados:
 - capa: `iie_mapa_vectorial`;
@@ -981,10 +992,10 @@ También ayúdame a interpretar avisos de orden de ejes en EPSG:4326.
 ```
 :::
 
-Comandos clave:
+Comandos clave (seguramente lo que tendrás que poner en el `curl` deberás ajustarlo a tus condiciines):
 
 ```bash
-curl -s "http://10.0.90.76:8085/cgi-bin/qgis_mapserv.fcgi?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=iie_mapa_vectorial" > /tmp/iie_wfs.gml
+curl -s "http://<<IP-Octavio>>:8085/cgi-bin/qgis_mapserv.fcgi?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=iie_mapa_vectorial" > /tmp/iie_wfs.gml
 
 ls -lh /tmp/iie_wfs.gml
 grep -c "gml:featureMember" /tmp/iie_wfs.gml
@@ -993,7 +1004,7 @@ grep -n "fid" /tmp/iie_wfs.gml | head
 
 ```bash
 ogrinfo -ro \
-  "WFS:http://10.0.90.76:8085/cgi-bin/qgis_mapserv.fcgi?SERVICE=WFS&VERSION=1.0.0" \
+  "WFS:http://<<IP-Octavio>>:8085/cgi-bin/qgis_mapserv.fcgi?SERVICE=WFS&VERSION=1.0.0" \
   iie_mapa_vectorial \
   -so
 ```

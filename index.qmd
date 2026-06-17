@@ -1,5 +1,9 @@
 ---
 title: "Inicio"
+
+format: html-live
+engine: knitr
+
 ---
 
 # Reglas de trabajo

@@ -3,6 +3,7 @@ title: "Configuración WSL: Multiusuario, Remoto y Micromamba"
 subtitle: "Estructura de alto rendimiento para el equipo IIE"  
 author: "Miguel Equihua Zamora"  
 date: "2026-05-19"  
+
 format:  
   html:  
     theme: cosmo  
