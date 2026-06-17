@@ -3,8 +3,17 @@ title: "Tutorial de Automatización con Snakemake y RStudio"
 subtitle: "Modelado Geoespacial para la Gestión de la Integridad Ecosistémica"
 author: "Laboratorio de Integridad Ecosistémica"
 date: "2026-05-29"
+
+format: live-html
+
+webr:
+  packages:
+    - pingr
+    - stringr
 engine: knitr
 ---
+
+
 
 ## 1. Introducción y Contexto del Proyecto
 
@@ -183,8 +192,16 @@ Para que Snakemake funcione de forma automática y ordenada, el repositorio debe
 
 Todo este tutorial se opera mediante terminal conectada al equipo de Octavio. Hay varias formas de conseguir esas terminales. La más directa es con **PowerShell** (🪟 + R [powershell]), pero también puedes usar la **Rstudio** en tu equipo o la de **Rstudio server** que está corriendo directamente en el equipo de Cctavio. En todos los casos el gran misterio es ¿cuál es la **IP** vigente de ese equipo?  Desafortunadamente la **IP** de nuestros equipos en el Inecol no es fija, seguramente cambiará de tiempo en tiempo, pero se mantendrá mientras el equipo no se apague. Para conseguir la dirección actual de la máquina de Octavio dentro del Inecol, puedes usar lo siguiente desde una terminal de **PowerSHell** (ese -4, pide específicamente una **IP** versión 4 que es el tipo que usaremos:
 
-```powershell
-ping DESKTOP-QLC4OUO -4
+```{webr}
+#| label: get-ip
+#| echo: false
+
+ping_result <- system("ping DESKTOP-QLC4OUO  -4", intern = TRUE)
+
+ip_oct <- stringr::str_extract(ping_result, "(?<=desde )(.*?)(?=\\: by)")
+ip_oct <- ip_oct[!is.na(ip_oct)][1]
+cat("\nLa IP actual de octavio-wsl es:", ip_oct, "\n\n")
+
 ```
 
 Para los siguientes pasos puede convenir tener acceso cómodo al disco que usaremos todos, en la máquina de Octavio. Una herramienta para lograr esto es [winscpf](https://winscp.net/). Es una aplicación para Windows que te mostrará, lado a lado, el directorio local y el del servidor que estamos usando. Una vez que lo tengas instalado, te pedirá los datos de conexión La **IP** local de Octavio, tus credenciales y listo. Le das conectar y ya está. 
