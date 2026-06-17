@@ -184,7 +184,7 @@ Para que Snakemake funcione de forma automática y ordenada, el repositorio debe
 ## 3. Preparación del Área de Trabajo y Permisos
 
 
-Todo este tutorial se opera mediante terminal conectada al equipo de Octavio. Hay varias formas de conseguir esas terminales. La más directa es con **PowerShell** (🪟 + R [powershell]), pero también puedes usar la **Rstudio** en tu equipo o la de **Rstudio server** que está corriendo directamente en el equipo de Cctavio. En todos los casos el gran misterio es ¿cuál es la **IP** vigente de ese equipo?  Desafortunadamente la **IP** de nuestros equipos en el Inecol no es fija, seguramente cambiará de tiempo en tiempo, pero se mantendrá mientras el equipo no se apague. Para conseguir la dirección actual de la máquina de Octavio dentro del Inecol, puedes usar lo siguiente desde una terminal de **PowerSHell** (ese -4, pide específicamente una **IP** versión 4 que es el tipo que usaremos:
+Todo este tutorial se opera mediante terminal conectada al equipo de Octavio. Hay varias formas de conseguir esas terminales. La más directa es con **PowerShell** (🪟 + R [powershell]), pero también puedes usar la **Rstudio** en tu equipo o la de **Rstudio server** que está corriendo directamente en el equipo de Octavio. En todos los casos el gran misterio es ¿cuál es la **IP** vigente de ese equipo?  Desafortunadamente la **IP** de nuestros equipos en el Inecol no es fija, seguramente cambiará de tiempo en tiempo, pero se mantendrá mientras el equipo no se apague. Para conseguir la dirección actual de la máquina de Octavio dentro del Inecol, puedes usar lo siguiente desde una terminal de **PowerShell** (ese -4, pide específicamente una **IP** versión 4 que es el tipo que usaremos:
 
 
 ::: {#def-consigue-ip .definition}
@@ -195,12 +195,14 @@ Todo este tutorial se opera mediante terminal conectada al equipo de Octavio. Ha
 ```
 :::
 
+
+
 Para los siguientes pasos puede convenir tener acceso cómodo al disco que usaremos todos, en la máquina de Octavio. Una herramienta para lograr esto es [winscpf](https://winscp.net/). Es una aplicación para Windows que te mostrará, lado a lado, el directorio local y el del servidor que estamos usando. Una vez que lo tengas instalado, te pedirá los datos de conexión La **IP** local de Octavio, tus credenciales y listo (@def-consigue-ip). Le das conectar y ya está. 
 
 ![Acceso al disco del servidor de Octavio](../img/WindSCP-inicio.png)
 
 
-Para este tutorial cada miembro del equipo (Octavio, Martha, Maricruz, Pita, julian) trabajará de forma aislada e independiente en su propio directorio asignado dentro del almacenamiento SSD del servidor. Esto garantiza que puedan experimentar, modificar configuraciones y correr la tubería sin interferir con los demás.
+Para este tutorial cada miembro del equipo (Octavio, Martha, Maricruz, Pita, Julian) trabajará de forma aislada e independiente en su propio directorio asignado dentro del almacenamiento SSD del servidor. Esto garantiza que puedan experimentar, modificar configuraciones y correr la tubería sin interferir con los demás.
 
 
 Al usar `$USER` los comandos substituirán esa variable automáticamente por el dato de quién inició la terminal (ej. `martha`, `octavio`, `maricruz`, `pita`, `julian` o `equihuam`). Lo hará en cualquier comando en el que aparezca.
@@ -880,7 +882,7 @@ Dame comandos `unzip`, `grep` y `sed` para revisar el contenido.
 ```
 :::
 
-Seguramente la **IA** te propondrá algo como lo que me dio a mi. Básicamente es lo necesario para abrir el zip que es el proyecto **qgz** y poderlo analizar. Revisa la especificación de las leyendas y los metadatos necesarios para servir los mapas en la Web, utilizando la tecnología que tiene disponibke **QGis server**:
+Seguramente la **IA** te propondrá algo como lo que me dio a mi. Básicamente es lo necesario para abrir el zip que es el proyecto **qgz** y poderlo analizar. Revisa la especificación de las leyendas y los metadatos necesarios para servir los mapas en la Web, utilizando la tecnología que tiene disponible **QGis server**:
 
 ```bash
 rm -rf /tmp/qgz_server
@@ -906,7 +908,7 @@ El servir mapas en la Web se hace con la tecnología [**WMS**](https://mapserver
 2. **WFS**. *Web Feature Service* es la opción que entrega datos vectoriales sin las especificaciones de diseño de leyendas.
 3. **WCS**. **Web Coverage Service** es la opción que entrega datos en formato ráster y puede incluir series de tiempo. 
 
-En nuestra configuración, el servidor de mapas está montado en el equipo de Octavio y llegas a él mediante el puerto **8085**. En **QGis**, busca la sección "browser", ahí encontrarás las etiquetas **WMS**, **WFS** y **WCS**. Si das clic con botón derecho del mouse, te dará oportunidad de dar de alta un nuevo enlace del tipo. Entra ahí, elige un nombre para identificar tu conexión y en `URL` anota `http://<<IP-Octavio>>:8085/cgi-bin/qgis_mapserv.fcg?MAP=/data/<<uername>-iie/resultados/proyecto_server.qgz`, cambia la **IP** y el **username**por los datos que correspondan en este momento (@def-consigue-ip). Si usaste otro nombre eb lugar de `proyecto_server.qgz` deberas susstituirlo también. Guarda y verifica el resultado. Deberías ver que la conexión se activa y te ofrece los productos que tu proyecto ha especificado.
+En nuestra configuración, el servidor de mapas está montado en el equipo de Octavio y llegas a él mediante el puerto **8085**. En **QGis**, busca la sección "browser", ahí encontrarás las etiquetas **WMS**, **WFS** y **WCS**. Si das clic con botón derecho del mouse, te dará oportunidad de dar de alta un nuevo enlace del tipo. Entra ahí, elige un nombre para identificar tu conexión y en `URL` anota `http://<<IP-Octavio>>:8085/cgi-bin/qgis_mapserv.fcg?MAP=/data/<<uername>-iie/resultados/proyecto_server.qgz`, cambia la **IP** y el **username**por los datos que correspondan en este momento (@def-consigue-ip). Si usaste otro nombre en lugar de `proyecto_server.qgz` deberás sustituirlo también. Guarda y verifica el resultado. Deberías ver que la conexión se activa y te ofrece los productos que tu proyecto ha especificado.
 
 
 #### Revisar la entrega de mapas formateados mediante **WMS**
@@ -958,7 +960,7 @@ Dame pruebas para:
 
 #### Revisar la entrega **WFS** sin recurrir a **QGis GUI**
 
-Para esta capa te sugiero ir a la opción *Layer/Data Source Manager*. Encontré que intentar jalar la capa directamente desde la pestaña browser deja algunos atributos sin definir y la interfaz reporta errores, aunque la cobertura esté bien y sea be ȧn entregada por el servidor. En cambio, por el camino *Data Sourcw Manager* tienes más control y la obtención de los datos fluye de mejor manera. Puedes incluso hacer ahí algo de manejo tipo base de datos **SQL**, que es interesante.
+Para esta capa te sugiero ir a la opción *Layer/Data Source Manager*. Encontré que intentar jalar la capa directamente desde la pestaña browser deja algunos atributos sin definir y la interfaz reporta errores, aunque la cobertura esté bien y sea bien entregada por el servidor. En cambio, por el camino *Data Source Manager* tienes más control y la obtención de los datos fluye de mejor manera. Puedes incluso hacer ahí algo de manejo tipo base de datos **SQL**, que es interesante.
 
 ![Data source manager](scripts-y-reglas/img/data-source-manager.png)
 
@@ -992,7 +994,7 @@ También ayúdame a interpretar avisos de orden de ejes en EPSG:4326.
 ```
 :::
 
-Comandos clave (seguramente lo que tendrás que poner en el `curl` deberás ajustarlo a tus condiciines):
+Comandos clave (seguramente lo que tendrás que poner en el `curl` deberás ajustarlo a tus condiciones):
 
 ```bash
 curl -s "http://<<IP-Octavio>>:8085/cgi-bin/qgis_mapserv.fcgi?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=iie_mapa_vectorial" > /tmp/iie_wfs.gml
