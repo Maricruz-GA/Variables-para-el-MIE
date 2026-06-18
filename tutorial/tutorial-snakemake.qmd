@@ -184,7 +184,7 @@ Para que Snakemake funcione de forma automática y ordenada, el repositorio debe
 ## 3. Preparación del Área de Trabajo y Permisos
 
 
-Todo este tutorial se opera mediante terminal conectada al equipo de Octavio. Hay varias formas de conseguir esas terminales. La más directa es con **PowerShell** (🪟 + R [powershell]), pero también puedes usar la **Rstudio** en tu equipo o la de **Rstudio server** que está corriendo directamente en el equipo de Octavio. En todos los casos el gran misterio es ¿cuál es la **IP** vigente de ese equipo?  Desafortunadamente la **IP** de nuestros equipos en el Inecol no es fija, seguramente cambiará de tiempo en tiempo, pero se mantendrá mientras el equipo no se apague. Para conseguir la dirección actual de la máquina de Octavio dentro del Inecol, puedes usar lo siguiente desde una terminal de **PowerShell** (ese -4, pide específicamente una **IP** versión 4 que es el tipo que usaremos:
+Todo este tutorial se opera mediante terminal conectada al equipo de Octavio. Hay varias formas de conseguir esas terminales. La más directa es con **PowerShell** (🪟 + R [PowerShell]), pero también puedes usar la **Rstudio** en tu equipo o la de **Rstudio server** que está corriendo directamente en el equipo de Octavio. En todos los casos el gran misterio es ¿cuál es la **IP** vigente de ese equipo?  Desafortunadamente la **IP** de nuestros equipos en el Inecol no es fija, seguramente cambiará de tiempo en tiempo, pero se mantendrá mientras el equipo no se apague. Para conseguir la dirección actual de la máquina de Octavio dentro del Inecol, puedes usar lo siguiente desde una terminal de **PowerShell** (ese -4, pide específicamente una **IP** versión 4 que es el tipo que usaremos:
 
 
 ::: {#def-consigue-ip .definition}
@@ -202,7 +202,7 @@ Para los siguientes pasos puede convenir tener acceso cómodo al disco que usare
 ![Acceso al disco del servidor de Octavio](../img/WindSCP-inicio.png)
 
 
-Para este tutorial cada miembro del equipo (Octavio, Martha, Maricruz, Pita, Julian) trabajará de forma aislada e independiente en su propio directorio asignado dentro del almacenamiento SSD del servidor. Esto garantiza que puedan experimentar, modificar configuraciones y correr la tubería sin interferir con los demás.
+Para este tutorial cada miembro del equipo (Octavio, Martha, Maricruz, Pita, Julián) trabajará de forma aislada e independiente en su propio directorio asignado dentro del almacenamiento SSD del servidor. Esto garantiza que puedan experimentar, modificar configuraciones y correr la tubería sin interferir con los demás.
 
 
 Al usar `$USER` los comandos substituirán esa variable automáticamente por el dato de quién inició la terminal (ej. `martha`, `octavio`, `maricruz`, `pita`, `julian` o `equihuam`). Lo hará en cualquier comando en el que aparezca.
@@ -242,7 +242,7 @@ tree /srv/iie-tutor/$USER-iie/
 
 #### Home
 
-No existe tal cosa como una referencia al disco al estilo windows (C:/ o D:/). Todo se reduce a una lista de ubicaciones separadas por `/`. Hay muchas de ellas y por conveniencia sólo habitaremos `/srv/` normalmente, pero quizás quieras saber que eres dueña de tu casa, a la que puedes llegar con `cd ~` es una manera corta de decir *Cambia al Directorio `/home/<<user>>`* puedes crear directorios y archivos ahí con bastante libertad, pero también viven ahí datos de tu configuración particular que conviene no alterar si no estas segura de lo que estás haciendo.
+No existe tal cosa como una referencia al disco al estilo Windows (C:/ o D:/). Todo se reduce a una lista de ubicaciones separadas por `/`. Hay muchas de ellas y por conveniencia sólo habitaremos `/srv/` normalmente, pero quizás quieras saber que eres dueña de tu casa, a la que puedes llegar con `cd ~` es una manera corta de decir *Cambia al Directorio `/home/<<user>>`* puedes crear directorios y archivos ahí con bastante libertad, pero también viven ahí datos de tu configuración particular que conviene no alterar si no estas segura de lo que estás haciendo.
 
 Mostrar el contenido de cualquier directorio se logra con `ls` o con `dir`. No son equivalentes ni sinónimos, son dos programitas distintos. Para fines prácticos el `ls` crudo produce una salida como chorizo, algo incómoda. Sí haces esto `ls -l`, entonces te produce una tabla con columnas y colores bastante informativa y cómoda de interpretar. `dir` normalmente no es colorida y por lo demás se comporta parecido a `ls` varían en su batería de opciones.
 
@@ -274,7 +274,7 @@ Me encantará saber cuál de todas las opciones que les he preparado les parece 
 
 
 
-Conviene por muchas razones crear un *Proyecto de RStudio* localizado directamente dentro de la carpeta de Linux que acabas de hacer. Con este proyecto ahí, el panel Files se "anclará" automáticamente a esa ruta cada vez que abras el proyecto. Para construir este espacio en RStudio, ve a File $\rightarrow$ New Project...Selecciona Existing Directory. Haz clic en Browse... y en la barra de direcciones de la ventana que se abre, elige el la unidad RaiDrive que acabas de crear. Dale clic a Create Project y listo. A partir de ahora, RStudio abrirá el panel Files exactamente en esa ruta nativa de WSL, y todos los scripts usarán rutas relativas de manera natural. Si optas por hacerlo con **RStudio servere**, harás lo mismo, pero será más simple, pues ya estas ubicada en la máquina Linux en la que está ocurriendo todo.
+Conviene por muchas razones crear un *Proyecto de RStudio* localizado directamente dentro de la carpeta de Linux que acabas de hacer. Con este proyecto ahí, el panel Files se "anclará" automáticamente a esa ruta cada vez que abras el proyecto. Para construir este espacio en RStudio, ve a File $\rightarrow$ New Project...Selecciona Existing Directory. Haz clic en Browse... y en la barra de direcciones de la ventana que se abre, elige el la unidad RaiDrive que acabas de crear. Dale clic a Create Project y listo. A partir de ahora, RStudio abrirá el panel Files exactamente en esa ruta nativa de WSL, y todos los scripts usarán rutas relativas de manera natural. Si optas por hacerlo con **RStudio server**, harás lo mismo, pero será más simple, pues ya estas ubicada en la máquina Linux en la que está ocurriendo todo.
 
 
 ## 4. Configuración del `snakemake`
@@ -405,7 +405,7 @@ Si quieres monitorear en tiempo real cómo se están comportando los núcleos de
 
 ### Cambiar el enfoque: Ráster vs Vectorial
 
-Este ejemplo es bueno para apreciar la conveniencia de optar por el formato ráster en lugar del vectorial. En casos de datos grandes (grandes espacios y/o alta resolución). Es un error común seguir la intuición de usar un Geopackage vectorial para guardar una colección de datos referidos a una cuadrícula regular. Una colección vectorial de cuadrados regulares guarda 4 coordenadas completas para cada entidad, además de los datos de topología y  metadatos variados. La cobertura de México completa  a una resolución de 250m tendría un peso estimado de ~15 a 30 GB constituida por unos 31 millones de polígonos. En contraste, un Ráster (GeoTIFF) solo guarda el valor del índice del pixel. La posición espacial se infiere por cálculo simple, referido a la matriz que forma la colección de pixeles. Hagamos un script (`4_crear_raster_regional.py`) que aborde la tarea que ya hicimos en vectores, pero que ahora volveremos a hacer en formato ráster.
+Este ejemplo es bueno para apreciar la conveniencia de optar por el formato ráster en lugar del vectorial. En casos de datos grandes (grandes espacios y/o alta resolución). Es un error común seguir la intuición de usar un Geopackage vectorial para guardar una colección de datos referidos a una cuadrícula regular. Una colección vectorial de cuadrados regulares guarda 4 coordenadas completas para cada entidad, además de los datos de topología y  metadatos variados. La cobertura de México completa  a una resolución de 250m tendría un peso estimado de ~15 a 30 GB constituida por unos 31 millones de polígonos. En contraste, un Ráster (GeoTIFF) solo guarda el valor del índice del pixel. La posición espacial se infiere por cálculo simple, referido a la matriz que forma la colección de píxeles. Hagamos un script (`4_crear_raster_regional.py`) que aborde la tarea que ya hicimos en vectores, pero que ahora volveremos a hacer en formato ráster.
   
 
 ```{.python}
@@ -702,7 +702,7 @@ python scripts/5_create_qgis_project.py \
 Lo siguiente es resolver como quieres que se vea el mapa. Básicamente hay que resolver como construir la simbología, las paletas de colores de los dos tipos de mapas. Lo podemos hacer con algo parecido a la siguiente interacción con la **IA**. 
 
 
-#### Prompt 3 — Agregar simbología raster y vectorial
+#### Prompt 3 — Agregar simbología ráster y vectorial
 
 ::: {.ai-prompt}
 ```text
@@ -1045,7 +1045,7 @@ Quiero recomendaciones para usuarios de **QGis** Desktop:
 
 #### Documentación: preparar README o bitácora
 
-No olvides documentar lo que hiciste. También le puedes pedir ayuda a la **IA** para generar un documento de acompañamiento. No traté aquí nada de la documentación y registro de los matadatos. **Maricruz nos orientará sobre este tema**.
+No olvides documentar lo que hiciste. También le puedes pedir ayuda a la **IA** para generar un documento de acompañamiento. No traté aquí nada de la documentación y registro de los metadatos. **Maricruz nos orientará sobre este tema**.
 
 
 ::: {.ai-prompt}
