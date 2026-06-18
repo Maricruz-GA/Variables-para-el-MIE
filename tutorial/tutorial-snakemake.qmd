@@ -187,7 +187,7 @@ Para que Snakemake funcione de forma automática y ordenada, el repositorio debe
 Todo este tutorial se opera mediante terminal conectada al equipo de Octavio. Hay varias formas de conseguir esas terminales. La más directa es con **PowerShell** (🪟 + R [PowerShell]), pero también puedes usar la **Rstudio** en tu equipo o la de **Rstudio server** que está corriendo directamente en el equipo de Octavio. En todos los casos el gran misterio es ¿cuál es la **IP** vigente de ese equipo?  Desafortunadamente la **IP** de nuestros equipos en el Inecol no es fija, seguramente cambiará de tiempo en tiempo, pero se mantendrá mientras el equipo no se apague. Para conseguir la dirección actual de la máquina de Octavio dentro del Inecol, puedes usar lo siguiente desde una terminal de **PowerShell** (ese -4, pide específicamente una **IP** versión 4 que es el tipo que usaremos:
 
 
-::: {#def-consigue-ip .definition}
+::: {#def-consigue-ip .definition .title}
 | Conseguir la IP que necesitas
  
 ```powershell
@@ -275,6 +275,10 @@ Me encantará saber cuál de todas las opciones que les he preparado les parece 
 
 
 Conviene por muchas razones crear un *Proyecto de RStudio* localizado directamente dentro de la carpeta de Linux que acabas de hacer. Con este proyecto ahí, el panel Files se "anclará" automáticamente a esa ruta cada vez que abras el proyecto. Para construir este espacio en RStudio, ve a File $\rightarrow$ New Project...Selecciona Existing Directory. Haz clic en Browse... y en la barra de direcciones de la ventana que se abre, elige el la unidad RaiDrive que acabas de crear. Dale clic a Create Project y listo. A partir de ahora, RStudio abrirá el panel Files exactamente en esa ruta nativa de WSL, y todos los scripts usarán rutas relativas de manera natural. Si optas por hacerlo con **RStudio server**, harás lo mismo, pero será más simple, pues ya estas ubicada en la máquina Linux en la que está ocurriendo todo.
+
+### Entorno de trabajo
+
+Cuando inicias en tu sesión **SSH**, seguramente notarás la frase `qgis_env`. Se trata de una indicación de que ya estas ubicada en un **ambiente virtual de trabajo** que contiene todo lo necesario para hacer mapas con **QGis** y también está ahí habilitado **Snakemake**. Hay otros dos ambientes posibles `base` y `profiling_env`. El primero es la condición de la máquina sin ninguna preparación, probablemente no tendrás ahí ni siquiera a Python. Llegas a esa configuración con `micromamba deactivate` o con `micromamba activate base`. Hay ocasiones en las que conviene tener tal configuración, pero no será el caso en este tutorial. El otro *ambiente virtual* tiene instalada la paquetería necesaria para hacer *data profiling*. Esto quiere decir que puedes darle cualquier **CSV** con datos organizados por columnas, y te entregará un análisis muy completo de los atributos que tienen las variables y sus peculiaridades estadísticas. No lo usaremos en este tutorial, pero es algo que tiene mucho interés para las nuevas variables que estaremos procesando. Puedes hacer un análisis descriptivo de este tipo escribiendo dentro de ese entorno el comando `ydata-profiling <<ruta al archivo csv que quieras>>`. Te entregará un reporte en una archivo `HTML` que verás como una página Web. La forma de activar ese entorno virtual es `micromamba activate profiling_env`. Para los fines de este tutorial, debes asegurarte de tener activo el entorno virtual `qgis_env`. Si no ves tal indicación en tu línea de comandos de tu terminal, puedes activarlo con `micromamba activate qgis_env`en el momento en el que lo necesites.
 
 
 ## 4. Configuración del `snakemake`

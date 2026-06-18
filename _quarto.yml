@@ -16,8 +16,9 @@ website:
   page-navigation: true
   
 crossref: 
-  def-title: "Def"
-  def-prefix: "Def"
+  def-title: "Comando"
+  def-prefix: "Com."
+  def-labels: alpha
   
 format:
   html:
