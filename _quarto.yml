@@ -18,8 +18,7 @@ website:
 crossref: 
   def-title: "Comando"
   def-prefix: "Com."
-  def-labels: alpha
-  
+
 format:
   html:
     embed-resources: true
