@@ -2,16 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
 
 <meta charset="utf-8">
-<<<<<<< HEAD
-<meta name="generator" content="quarto-1.9.38">
-=======
 <meta name="generator" content="quarto-1.9.37">
->>>>>>> a0afb37b3110c3eb5af6cbbe6487a71187a92761
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>operacion-snakemake – Workflow IIE-3T</title>
+<title>Arrancar el sistema ssh/WSL – Workflow IIE-3T</title>
 <style>
 
 code{white-space: pre-wrap;}
@@ -23,6 +19,41 @@ ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
 width: 0.8em;
 margin: 0 0.8em 0.2em -1em;  vertical-align: middle;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+}
+pre.numberSource { margin-left: 3em; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -4206,81 +4237,58 @@ vertical-align: -.125em;
     <h2 id="toc-title">En esta página</h2>
    
   <ul>
-  <li><a href="#operación-de-snakemake" id="toc-operación-de-snakemake" class="nav-link active" data-scroll-target="#operación-de-snakemake">Operación de Snakemake</a>
-  <ul class="collapse">
-  <li><a href="#requisitos" id="toc-requisitos" class="nav-link" data-scroll-target="#requisitos">1. Requisitos</a></li>
-  <li><a href="#validación-previa" id="toc-validación-previa" class="nav-link" data-scroll-target="#validación-previa">2. Validación previa</a></li>
-  <li><a href="#ejecución-básica" id="toc-ejecución-básica" class="nav-link" data-scroll-target="#ejecución-básica">3. Ejecución básica</a></li>
-  <li><a href="#ejecución-con-número-de-núcleos" id="toc-ejecución-con-número-de-núcleos" class="nav-link" data-scroll-target="#ejecución-con-número-de-núcleos">4. Ejecución con número de núcleos</a></li>
-  <li><a href="#forzar-reejecución" id="toc-forzar-reejecución" class="nav-link" data-scroll-target="#forzar-reejecución">5. Forzar reejecución</a></li>
-  <li><a href="#limpiar-productos" id="toc-limpiar-productos" class="nav-link" data-scroll-target="#limpiar-productos">6. Limpiar productos</a></li>
-  <li><a href="#logs" id="toc-logs" class="nav-link" data-scroll-target="#logs">7. Logs</a></li>
-  <li><a href="#integración-con-pytest" id="toc-integración-con-pytest" class="nav-link" data-scroll-target="#integración-con-pytest">8. Integración con pytest</a></li>
-  <li><a href="#problemas-frecuentes" id="toc-problemas-frecuentes" class="nav-link" data-scroll-target="#problemas-frecuentes">9. Problemas frecuentes</a></li>
-  </ul></li>
+  <li><a href="#paso-1-revivir-el-servicio-ssh-dentro-de-ubuntu" id="toc-paso-1-revivir-el-servicio-ssh-dentro-de-ubuntu" class="nav-link active" data-scroll-target="#paso-1-revivir-el-servicio-ssh-dentro-de-ubuntu">Paso 1: Revivir el servicio SSH dentro de Ubuntu</a></li>
+  <li><a href="#paso-2-verificar-si-la-ip-interna-de-wsl-cambió" id="toc-paso-2-verificar-si-la-ip-interna-de-wsl-cambió" class="nav-link" data-scroll-target="#paso-2-verificar-si-la-ip-interna-de-wsl-cambió">Paso 2: Verificar si la IP interna de WSL cambió</a></li>
+  <li><a href="#paso-3-reajustar-el-puente-de-red-portproxy" id="toc-paso-3-reajustar-el-puente-de-red-portproxy" class="nav-link" data-scroll-target="#paso-3-reajustar-el-puente-de-red-portproxy">Paso 3: Reajustar el puente de red (Portproxy)</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Arrancar el sistema ssh/WSL</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
 
 
-<section id="operación-de-snakemake" class="level1">
-<h1>Operación de Snakemake</h1>
-<section id="requisitos" class="level2">
-<h2 class="anchored" data-anchor-id="requisitos">1. Requisitos</h2>
-<ul>
-<li>entorno qgis_env activo</li>
-<li>estructura de directorios creada</li>
-<li>archivo config/config.yaml revisado</li>
-</ul>
-</section>
-<section id="validación-previa" class="level2">
-<h2 class="anchored" data-anchor-id="validación-previa">2. Validación previa</h2>
-<ul>
-<li>verificar rutas de entrada</li>
-<li>verificar que existe reg_unidas</li>
-<li>verificar permisos de escritura</li>
-</ul>
-</section>
-<section id="ejecución-básica" class="level2">
-<h2 class="anchored" data-anchor-id="ejecución-básica">3. Ejecución básica</h2>
-<p>snakemake -n snakemake –cores 1</p>
-</section>
-<section id="ejecución-con-número-de-núcleos" class="level2">
-<h2 class="anchored" data-anchor-id="ejecución-con-número-de-núcleos">4. Ejecución con número de núcleos</h2>
-<p>snakemake –cores 4</p>
-</section>
-<section id="forzar-reejecución" class="level2">
-<h2 class="anchored" data-anchor-id="forzar-reejecución">5. Forzar reejecución</h2>
-<p>snakemake –forcerun batimetria –cores 1</p>
-</section>
-<section id="limpiar-productos" class="level2">
-<h2 class="anchored" data-anchor-id="limpiar-productos">6. Limpiar productos</h2>
-<p>explicar qué se limpia manualmente y qué no</p>
-</section>
-<section id="logs" class="level2">
-<h2 class="anchored" data-anchor-id="logs">7. Logs</h2>
-<p>ubicación de logs por regla</p>
-</section>
-<section id="integración-con-pytest" class="level2">
-<h2 class="anchored" data-anchor-id="integración-con-pytest">8. Integración con pytest</h2>
-<p>pytest -q pytest tests/test_erosion_integration.py -q</p>
-</section>
-<section id="problemas-frecuentes" class="level2">
-<h2 class="anchored" data-anchor-id="problemas-frecuentes">9. Problemas frecuentes</h2>
-<ul>
-<li>rutas Windows/WSL</li>
-<li>CRS faltante</li>
-<li>shapefile sin campo esperado</li>
-<li>bloqueo de archivos</li>
-</ul>
+</header>
 
 
+<section id="paso-1-revivir-el-servicio-ssh-dentro-de-ubuntu" class="level3">
+<h3 class="anchored" data-anchor-id="paso-1-revivir-el-servicio-ssh-dentro-de-ubuntu">Paso 1: Revivir el servicio SSH dentro de Ubuntu</h3>
+<p>Por defecto, WSL2 no arranca sus servicios automáticamente cuando Windows enciende. Vamos a darle la patada inicial a SSH:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>wsl <span class="op">-</span>d Ubuntu <span class="op">-</span>u root <span class="op">--</span> service ssh <span class="fu">start</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
+<section id="paso-2-verificar-si-la-ip-interna-de-wsl-cambió" class="level3">
+<h3 class="anchored" data-anchor-id="paso-2-verificar-si-la-ip-interna-de-wsl-cambió">Paso 2: Verificar si la IP interna de WSL cambió</h3>
+<p>Al apagarse la máquina a la fuerza, es casi seguro que Windows le asignó una IP interna nueva a Ubuntu. Ejecuta esto para ver cuál tiene en este instante:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>wsl <span class="op">-</span>d Ubuntu <span class="op">-</span>u root <span class="op">--</span> ip addr show eth0</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Anota la IP que aparece junto a <code>inet</code> (será algo como 172.24.X.X).</p>
+</section>
+<section id="paso-3-reajustar-el-puente-de-red-portproxy" class="level3">
+<h3 class="anchored" data-anchor-id="paso-3-reajustar-el-puente-de-red-portproxy">Paso 3: Reajustar el puente de red (Portproxy)</h3>
+<p>Si la IP del paso anterior es diferente a la que teníamos configurada el sábado, el puente se rompió. Actualízalo rápido corriendo estas líneas (cambiando LA_NUEVA_IP_DE_WSL por la que acabas de ver):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Borrar el proxy desalineado</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>netsh interface portproxy delete v4tov4 listenaddress<span class="op">=</span><span class="dv">100.92</span><span class="op">.</span><span class="dv">147.14</span> listenport<span class="op">=</span><span class="dv">2200</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Apuntar al nuevo objetivo interno</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>netsh interface portproxy add v4tov4 listenaddress<span class="op">=</span><span class="dv">100.92</span><span class="op">.</span><span class="dv">147.14</span> listenport<span class="op">=</span><span class="dv">2200</span> connectaddress<span class="op">=</span>LA_NUEVA_IP_DE_WSL connectport<span class="op">=</span><span class="dv">22</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Una vez que apliques esto frente a la máquina o desde LogMeIn, el acceso ssh debe estar disponible de nuevo, pruébalo.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> <span class="at">-p</span> 2200 equihuam@100.92.147.14</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+
+
 </section>
 
 </main> <!-- /main -->
