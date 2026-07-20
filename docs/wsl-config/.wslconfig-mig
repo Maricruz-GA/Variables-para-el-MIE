@@ -1,0 +1,12 @@
+[wsl2]
+networkingMode=NAT
+localhostForwarding=true
+
+# Permite usar hasta 28GB de tus 32GB
+memory=28GB 
+
+# Usa todos los núcleos lógicos (tu i7-14700KF tiene 20 núcleos)
+processors=20
+
+# Permite usar el swap de Windows si es necesario
+swap=8GB

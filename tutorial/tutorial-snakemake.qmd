@@ -23,7 +23,7 @@ Para ejecutar Snakemake desde RStudio en este servidor, nos debemos asegurar de 
 
 ::: {.callout-caution collapse="true"}
 
-### Preparación
+### Preparación y Permisos
 
 Crear el directorio general, asignar acceso al grupo y definir permisos:
 >2 → activa setgid, así todos los archivos heredan el grupo iie
@@ -181,7 +181,7 @@ Para que Snakemake funcione de forma automática y ordenada, el repositorio debe
 ```
 
 
-## 3. Preparación del Área de Trabajo y Permisos
+## 3. Preparación del Área de Trabajo
 
 
 Todo este tutorial se opera mediante terminal conectada al equipo de Octavio. Hay varias formas de conseguir esas terminales. La más directa es con **PowerShell** (🪟 + R [powershell]), pero también puedes usar la **Rstudio** en tu equipo o la de **Rstudio server** que está corriendo directamente en el equipo de Octavio. En todos los casos el gran misterio es ¿cuál es la **IP** vigente de ese equipo?  Desafortunadamente la **IP** de nuestros equipos en el Inecol no es fija, seguramente cambiará de tiempo en tiempo, pero se mantendrá mientras el equipo no se apague. Para conseguir la dirección actual de la máquina de Octavio dentro del Inecol, puedes usar lo siguiente desde una terminal de **PowerShell** (ese -4, pide específicamente una **IP** versión 4 que es el tipo que usaremos:
@@ -334,7 +334,6 @@ Ubicado en la raíz de tu carpeta (`/srv/iie-tutor/$USER-iie/Snakefile`), este a
 
 ```
 
-
 ## 7. Documento Quarto para Reporte 
 
 Este documento lee los resultados espaciales intermedios de la simulación para compilar el HTML final. Guarde el documento de abajo aquí: `reportes/resumen_atributos.qmd`
@@ -348,7 +347,49 @@ Este documento lee los resultados espaciales intermedios de la simulación para 
 :::
 
 
-## 8. Ejecución desde RStudio
+
+## 8. Recolección tabular de las variables
+
+La siguiente tarea es recolectar los datos y producir un arreglo centralizado a partir de las múltiples fuentes de información geoespacial, sin importar su formato de origen (ráster o vectorial). 
+
+#### Regla en el `Snakefile`
+
+Para asegurar que el motor de Snakemake reconozca adecuadamente el flujo, la regla utiliza un mapeo posicional explícito. La sintaxis del bloque final queda estructurada de la siguiente manera:
+
+
+```{.python}
+{{< include reglas-paso-4-txt>}}
+
+```
+
+
+El script `scripts/6_agregar_datos.py` realiza un escaneo dinámico y recursivo en el subárbol de la carpeta `resultados/`. Muestrea los valores de píxel de los rásteres y extrae las columnas de datos de las capas vectoriales descubiertas.
+
+
+```python
+{{< include scripts-y-reglas/6_agregar_datos.py >}}
+```
+
+> **Nota de Diseño Importante:** Para evitar distorsiones y advertencias críticas de GeoPandas al calcular distancias en grados elipsoidales, el cálculo del centroide (`.centroid`) y el join espacial de vecindad (`sjoin_nearest`) se ejecutan estrictamente bajo un **CRS métrico (EPSG:6372)**. Posteriormente, el set de datos se reproyecta a **WGS84 (EPSG:4326)** para extraer coordenadas en formato decimal puro.
+
+### Criterios de Validación del Entregable Tabular
+
+Una vez completado el pipeline (`15 of 15 steps (100%) done`), el archivo consolidado estará disponible en `resultados/dataset_agregado.csv`. Puedes realizar una inspección directa mediante comandos de consola para verificar su estructura *Tidy Data*:
+
+```bash
+head -n 5 resultados/dataset_agregado.csv
+
+```
+
+El archivo final debe cumplir rigurosamente las siguientes expectativas de formato:
+
+1. **Ausencia de cadenas WKT/WKB:** No debe contener columnas con descripciones `MULTIPOLYGON` u objetos geométricos complejos.
+2. **Estructura fija inicial:** Columnas exactas denominadas `id` (entero consecutivo), `longitud` y `latitud` (coordenadas decimales nativas EPSG:4326).
+3. **Columnas dinámicas:** Mapeo exitoso e individualizado de coberturas según el nombre del archivo origen de datos (ej. `integridad_mexico` y `reticula_variable`).
+
+
+
+## 9. Ejecución desde RStudio
 
 Para poner en marcha el flujo, abre tu pestaña **Terminal** dentro de RStudio (asegúrate de estar posicionada en `/srv/iie-tutor/$USER-iie/`) y ejecuta:
 
@@ -364,7 +405,7 @@ snakemake --cores 2
 Si posteriormente deseas cambiar el tamaño de celda, modifica el valor numérico en tu `config/config.yaml`, vuelve a lanzar `snakemake --cores 2` y observa cómo el motor recalcula exclusivamente la retícula y el documento Quarto de forma limpia y precisa.
 
 
-## 9. ¿Cuántos núcleos tenemos disponibles?
+## 10. ¿Cuántos núcleos tenemos disponibles?
 
 El procesador del equipo de Octavio (**Intel Core i7-14700KF**) tiene una arquitectura híbrida moderna. Físicamente cuenta con **20 núcleos** (8 de alto rendimiento y 12 de eficiencia). Sin embargo, gracias a la tecnología Hyper-Threading en los núcleos de rendimiento, el sistema operativo (y por lo tanto WSL y Snakemake) detectan un total de **28 hilos lógicos**.
 
@@ -401,7 +442,7 @@ Si quieres monitorear en tiempo real cómo se están comportando los núcleos de
 
 
 
-## 10. Procesar tareas más complejas
+## 11. Procesar tareas más complejas
 
 ### Cambiar el enfoque: Ráster vs Vectorial
 
@@ -431,7 +472,7 @@ Con esta nueva opción de cómputo en su lugar, hay que regresar al archivo `sna
 
 ```
 
-## 11. El Reporte Maestro de Snakemake
+## 12. El Reporte Maestro de Snakemake
 
 Una vez que Snakemake ha procesado exitosamente todos nuestros datos y Quarto ha generado nuestros reportes (\*.html), existe un paso final que con Snakemake resulta muy sencillo de producir: La auto-documentación técnica.
 
@@ -481,7 +522,7 @@ Nuevamente tienes que regresar a tu `snakefile` para registrar esto y habilitar 
 
 
 ```{.python}
-{{< include reglas-paso-3-txt>}}
+{{< include reglas-paso-5-txt>}}
 
 ```
 
@@ -489,7 +530,7 @@ Nuevamente tienes que regresar a tu `snakefile` para registrar esto y habilitar 
 Al hacer esto, el comando simple:  `snakemake --report reporte_auditoria_iie.html` leerá automáticamente tu archivo de presentación, tomará el título principal y lo pondrá en la barra superior del navegador, además de colocar tu texto explicativo en la página principal del reporte.
 
 
-## 12 Gran desafío: hacer un script complejo
+## 13. Gran desafío: hacer un script complejo
 
 Espero que con el recorrido anterior haya desarrollado una comprensión inicial del concepto de construir un *workflow*. Ahora te propongo hacer algo más complicado y explorar como es que podemos recurrir a la *IA generativa* para desarrollar código que nos sirva. La idea que te propongo es desarrollar un nuevo paso del workflow que nos entregue un proyecto completo y funcional en **QGis**. Lo que haremos ahora es más que ver el código en sí, comentar sobre la secuencia de prompts que nos lleve a tener ese producto. El servidor de Octavio está preparado para 
 
