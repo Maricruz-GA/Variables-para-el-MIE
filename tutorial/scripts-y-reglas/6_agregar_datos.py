@@ -42,6 +42,7 @@ import os
 import logging
 import sys
 
+# Configuración de log bajo estándar
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
 def extraer_valores_raster(centroides_wgs84, raster_path):
@@ -56,27 +57,32 @@ def extraer_valores_raster(centroides_wgs84, raster_path):
 
 def main():
     try:
-        gpkg_path = snakemake.input[0]
+        gpkg_path = snakemake.input["gpkg"]
         output_csv = snakemake.output[0]
         
         logging.info(f"Cargando retícula poligonal base: {gpkg_path}")
         gdf_poligonos = gpd.read_file(gpkg_path)
         
+        # 1. Forzar CRS Métrico para operaciones de precisión espacial (limpia advertencias)
         CRS_METRICO = "EPSG:6372"
         if gdf_poligonos.crs != CRS_METRICO:
             gdf_poligonos = gdf_poligonos.to_crs(CRS_METRICO)
             
+        # Calcular centroides en metros de forma correcta
         gdf_centroides_m = gdf_poligonos.copy()
         gdf_centroides_m["geometry"] = gdf_poligonos.geometry.centroid
         
+        # Guardar una copia en WGS84 únicamente para la extracción del ráster y las columnas x, y finales
         gdf_centroides_wgs84 = gdf_centroides_m.to_crs("EPSG:4326")
         
+        # DataFrame de salida plano
         df_final = pd.DataFrame({
             'id': range(1, len(gdf_centroides_wgs84) + 1),
             'longitud': gdf_centroides_wgs84.geometry.x,
             'latitud': gdf_centroides_wgs84.geometry.y
         })
         
+        # Escaneo de coberturas en resultados/
         for root, _, files in os.walk("resultados/"):
             for file in files:
                 path = os.path.join(root, file)
@@ -90,14 +96,22 @@ def main():
                     logging.info(f" -> Ejecutando Proximidad Vectorial: {nombre_col}")
                     try:
                         temp_gdf = gpd.read_file(path).to_crs(CRS_METRICO)
+                        
+                        # Aislamiento de atributos: Identificar primera columna útil del gpkg hallado
                         columnas_datos = [c for c in temp_gdf.columns if c != 'geometry' and not c.startswith('index_')]
                         
                         if columnas_datos:
                             primera_col_valor = columnas_datos[0]
+                            
+                            # Para evitar colisiones de nombres con el dataset base, creamos un GDF mínimo
                             temp_minimo = temp_gdf[[primera_col_valor, 'geometry']].copy()
+                            # Renombramos la columna antes del join para congelar el ID del tema
                             temp_minimo = temp_minimo.rename(columns={primera_col_valor: nombre_col})
                             
+                            # Join espacial limpio en ambiente métrico
                             joined = gpd.sjoin_nearest(gdf_centroides_m, temp_minimo, how='left')
+                            
+                            # Asignar valores limpios al dataframe final
                             df_final[nombre_col] = joined[nombre_col].values
                         else:
                             df_final[nombre_col] = None
@@ -105,6 +119,7 @@ def main():
                     except Exception as e:
                         logging.warning(f"Error en join espacial con {file}: {e}")
 
+        # Guardar archivo plano impecable
         df_final.to_csv(output_csv, index=False)
         logging.info(f"Éxito. Dataset consolidado de puntos en: {output_csv}")
 

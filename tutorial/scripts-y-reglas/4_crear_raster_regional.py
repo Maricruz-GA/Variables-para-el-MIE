@@ -1,13 +1,23 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 """
 =============================================================================
 4_crear_raster_regional.py
 -----------------------------------------------------------------------------
-Propósito:
-    Rasterización de datos vectoriales en una matriz ráster (GeoTIFF)
-    optimizada para análisis regional.
+Descripción
+-----------
+- Rasteriza datos vectoriales en una matriz GeoTIFF optimizada.
+- Se usa en la Rama 2 para Big Data.
 
-Rol en el workflow:
-    Procesamiento espacial. Conversión de vectores a matriz de píxeles.
+Precondiciones
+--------------
+- Entradas: procesados/datos_{region}.csv.
+- Dependencias: geopandas, rasterio, numpy.
+
+Resultados
+----------
+- Salida: procesados/reticula_{region}.tif.
+- Criterio de éxito: Archivo TIFF válido y georreferenciado.
 =============================================================================
 """
 
@@ -17,38 +27,31 @@ from shapely.geometry import Point
 import rasterio
 from rasterio.transform import from_bounds
 from rasterio.features import rasterize
-import numpy as np
+import sys
+import logging
 
-# =============================================================================
-# Configuración y Parámetros
-# =============================================================================
-input_csv = snakemake.input["csv_region"]
-output_tif = snakemake.output["tif_region"]
-pixel_size_metros = snakemake.params["res"]
-res_grados = pixel_size_metros / 111000.0
+logging.basicConfig(level=logging.INFO)
 
 def main():
-    # 1. Leer datos
+    input_csv = snakemake.input["csv_region"]
+    output_tif = snakemake.output["tif_region"]
+    res = float(snakemake.params["res"])
+    
     df = pd.read_csv(input_csv)
-    geometrias = [Point(xy) for xy in zip(df['longitud'], df['latitud'])]
-    gdf = gpd.GeoDataFrame(df, geometry=geometrias, crs="EPSG:4326")
-
-    # 2. Definir límites y transformación
+    gdf = gpd.GeoDataFrame(df, geometry=[Point(xy) for xy in zip(df['longitud'], df['latitud'])], crs="EPSG:4326")
+    
     xmin, ymin, xmax, ymax = gdf.total_bounds
+    res_grados = res / 111000.0
     width = int((xmax - xmin) / res_grados) + 1
     height = int((ymax - ymin) / res_grados) + 1
     transform = from_bounds(xmin, ymin, xmax, ymax, width, height)
-
-    # 3. Rasterización
+    
     shapes = ((geom, value) for geom, value in zip(gdf.geometry, gdf['valor_indice']))
-    matriz = rasterize(shapes=shapes, out_shape=(height, width), 
-                       transform=transform, fill=-9999, dtype=rasterio.float32)
-
-    # 4. Exportar ráster
-    with rasterio.open(output_tif, 'w', driver='GTiff', height=height, width=width,
-                       count=1, dtype=rasterio.float32, crs='EPSG:4326',
-                       transform=transform, nodata=-9999) as dst:
+    matriz = rasterize(shapes=shapes, out_shape=(height, width), transform=transform, fill=-9999)
+    
+    with rasterio.open(output_tif, 'w', driver='GTiff', height=height, width=width, count=1, dtype='float32', transform=transform, crs="EPSG:4326") as dst:
         dst.write(matriz, 1)
+    logging.info(f"Raster generado: {output_tif}")
 
 if __name__ == "__main__":
     main()

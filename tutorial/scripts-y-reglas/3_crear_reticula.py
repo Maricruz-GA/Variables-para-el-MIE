@@ -1,13 +1,35 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 """
 =============================================================================
 3_crear_reticula.py
 -----------------------------------------------------------------------------
-Propósito:
-    Generar un GeoPackage vectorial de retícula regular a partir de puntos,
-    construyendo la grilla en un CRS métrico y exportando en EPSG:4326.
 
-Rol en el workflow:
-    Procesamiento espacial. Transformación de datos crudos a retícula vectorial.
+Descripción
+-----------
+Genera un archivo GeoPackage que contiene una retícula (grilla) vectorial 
+regular a partir de un dataset de puntos. Se utiliza en la Rama 1 del 
+workflow (Enfoque Vectorial) para espacializar datos tabulares en una 
+resolución fija.
+
+Precondiciones
+--------------
+- Entrada: datos/registros_base.csv (debe contener columnas 'latitud' y 'longitud').
+- Entorno: Requiere el entorno 'qgis_env' con geopandas, numpy y shapely.
+- CRS: Se asume entrada en EPSG:4326.
+
+Resultados
+----------
+- Salida: resultados/reticula_variable.gpkg.
+- Producto: GeoPackage vectorial con geometría de polígonos (celdas).
+- Criterio de éxito: Archivo generado en la ruta de salida con geometría válida.
+
+Notas relevantes
+----------------
+- Advertencia técnica: La construcción de la grilla se realiza internamente 
+  en un CRS métrico (EPSG:6372) para asegurar la precisión del tamaño del píxel.
+- Diseño: La función `create_pixel_box_metric` permite realizar el "snap" 
+  de los puntos a una grilla regular según el parámetro de resolución.
 =============================================================================
 """
 

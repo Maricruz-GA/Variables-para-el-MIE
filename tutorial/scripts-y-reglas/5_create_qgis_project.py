@@ -1,35 +1,34 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 """
 =============================================================================
 5_create_qgis_project.py
 -----------------------------------------------------------------------------
-Propósito:
-    Construir proyectos QGIS reproducibles desde cero para QGIS Desktop
-    y QGIS Server, usando únicamente una plantilla .qpt para los layouts.
 
-Productos esperados:
-    - target standalone:
-        Proyecto QGIS con rutas relativas, pensado para abrirse en QGIS Desktop.
+Descripción
+-----------
+Automatiza la creación de archivos de proyecto QGIS (.qgz) para uso en 
+Desktop o Server. Inyecta rutas de capas y simbología de forma programática.
 
-    - target server:
-        Proyecto QGIS con rutas absolutas internas al contenedor Docker,
-        pensado para QGIS Server.
+Precondiciones
+--------------
+- Entradas: Archivos ráster y vectoriales generados por reglas previas.
+- Dependencias: PyQGIS (librerías de QGIS) instaladas en el entorno.
+- CRS: Los archivos de entrada deben tener CRS definido.
 
-Estrategia:
-    - Cargar raster y vector desde salidas reales del workflow usando rutas del host.
-    - Aplicar simbología raster tipo viridis.
-    - Aplicar simbología vectorial graduada.
-    - Para standalone:
-        generar dos layouts editoriales independientes desde el mismo QPT.
-    - Para server:
-        evitar llamadas frágiles de PyQGIS Server.
-        El proyecto se escribe primero con rutas válidas del host y luego se
-        parchea el .qgs interno para:
-            * reemplazar /srv/iie-tutor por /data;
-            * publicar WMS/WFS/WCS;
-            * registrar capas WFS/WCS.
+Resultados
+----------
+- Salida: resultados/proyecto_final.qgz.
+- Producto: Proyecto QGIS empaquetado (.qgz) con configuraciones de WMS/WFS/WCS 
+  activadas (si el target es 'server').
+- Criterio de éxito: El archivo .qgz debe abrirse en QGIS sin rutas rotas.
+
+Notas relevantes
+----------------
+- Advertencia técnica: Se realiza un parcheo del XML interno del proyecto 
+  (.qgs) mediante manipulación de bytes/strings para ajustar rutas al 
+  desplegar en Docker/Server.
+- Limitación: Requiere que las rutas de capas sean relativas al proyecto.
 =============================================================================
 """
 
@@ -93,19 +92,14 @@ CONTAINER_PREFIX = "/data"
 
 PROJECT_CRS = "EPSG:4326"
 
-OGC_WMS_CRS_LIST = ["EPSG:4326", "EPSG:3857", "EPSG:6372"]
-OGC_WFS_CRS_LIST = ["EPSG:4326"]
-#OGC_WFS_CRS_LIST = ["EPSG:6372"]
-OGC_WCS_CRS_LIST = ["EPSG:4326"]
-
 VECTOR_LAYER_INTERNAL = "reticula_variable"
 VECTOR_LAYER_TITLE = "Retícula de integridad ecosistémica"
 RASTER_LAYER_TITLE = "Integridad ecosistémica raster"
 
 PREFERRED_VALUE_FIELDS = [
-    "integridad_simulada",
     "valor_indice",
     "valor_iie",
+    "integridad_simulada"
 ]
 
 
@@ -151,8 +145,9 @@ OGC_VECTOR_NAME = "iie_mapa_vectorial"
 OGC_RASTER_TITLE = "Mapa raster de integridad ecosistémica"
 OGC_VECTOR_TITLE = "Mapa vectorial de integridad ecosistémica"
 
-OGC_CRS_LIST = ["EPSG:4326", "EPSG:3857"]
-
+OGC_WMS_CRS_LIST = ["EPSG:4326", "EPSG:3857"]
+OGC_WFS_CRS_LIST = ["EPSG:4326"]
+OGC_WCS_CRS_LIST = ["EPSG:4326"]
 
 # =============================================================================
 # Utilidades de ruta
@@ -442,6 +437,14 @@ def configure_server_layer_tree(project: QgsProject, raster_layer, vector_layer)
     raster_node = root.insertLayer(1, raster_layer)
     raster_node.setItemVisibilityChecked(True)
 
+def fijar_extent_inicial(proyecto: QgsProject, layer) -> None:
+    try:
+        extent = layer.extent()
+        extent.scale(1.05)
+        rect = QgsReferencedRectangle(extent, layer.crs())
+        proyecto.viewSettings().setDefaultViewExtent(rect)
+    except Exception as e:
+        print(f"No se pudo fijar extent inicial: {e}")
 
 # =============================================================================
 # Layout QPT: dos layouts independientes desde la misma plantilla
@@ -797,7 +800,7 @@ def apply_target_datasources(
 
 
 # =============================================================================
-# Parche XML del .qgz server
+# Ajuste XML al archivo .qgz server
 # =============================================================================
 
 def _xml_text(value: str) -> str:
@@ -870,11 +873,13 @@ def _patch_ogc_project_properties(
     algunos entornos headless puede ser inestable.
     """
     replacements = {
-        "WMSServiceTitle": _qstring_property("WMSServiceTitle", OGC_SERVICE_TITLE),
+        "WFSMMaxFeatures": _qstring_property("WFSMMaxFeatures", "1000000"),
+        "WFSFeatureBounding": _bool_property("WFSFeatureBounding", True),
         "WMSServiceAbstract": _qstring_property(
-            "WMSServiceAbstract",
+            "WMSServiceAbstract", 
             OGC_SERVICE_ABSTRACT,
         ),
+        "WMSServiceTitle": _qstring_property("WMSServiceTitle", OGC_SERVICE_TITLE),
         "WFSServiceTitle": _qstring_property("WFSServiceTitle", OGC_SERVICE_TITLE),
         "WFSServiceAbstract": _qstring_property(
             "WFSServiceAbstract",
@@ -885,8 +890,6 @@ def _patch_ogc_project_properties(
             "WCSServiceAbstract",
             OGC_SERVICE_ABSTRACT,
         ),
-
-
         "WMSUseLayerIDs": _bool_property("WMSUseLayerIDs", False),
         "WMSCrsList": _qstringlist_property("WMSCrsList", OGC_WMS_CRS_LIST),
         "WFSCrsList": _qstringlist_property("WFSCrsList", OGC_WFS_CRS_LIST),
@@ -1087,7 +1090,7 @@ def main() -> None:
             raster_vmax,
         )
 
-        # 6. Preparar simbología vectorial.
+        # 6. Preparar simbología vectorial y zoom inicial.
         value_field = find_value_field(vector_layer)
 
         try:
@@ -1144,6 +1147,8 @@ def main() -> None:
                 raster_layer=raster_layer,
                 vector_layer=vector_layer,
             )
+            
+            fijar_extent_inicial(project, vector_layer)
 
         elif args.target == "server":
             # No hacer nada adicional con PyQGIS Server aquí.

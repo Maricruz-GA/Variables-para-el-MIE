@@ -1,27 +1,27 @@
-
+#!/usr/bin/env Rscript
 # =============================================================================
 # 2_construir_tabla.R
 # -----------------------------------------------------------------------------
-# Propósito:
-#     Agregación estadística para el resumen de atributos. Genera las métricas
-#     necesarias para el modelado regional y reportes de calidad.
-# 
-# Rol en el workflow:
-#     Procesamiento estadístico. Construcción de tablas de resumen.
+# Descripción
+# -----------
+# Genera métricas estadísticas de integridad por región y tipo de ecosistema.
+#
+# Precondiciones
+# --------------
+# - Entradas: procesados/datos_filtrados.csv.
+# - Supuestos: Columnas 'id_region', 'tipo_ecosistema', 'valor_indice'.
+#
+# Resultados
+# ----------
+# - Salida: resultados/tabla_atributos.csv.
+# - Criterio de éxito: Tabla con columnas de media y conteo.
 # =============================================================================
-
 
 library(readr)
 library(dplyr)
 
-# =============================================================================
-# 1. Carga de datos validados
-# =============================================================================
 datos_f <- read_csv(snakemake@input[["csv_filtrado"]], show_col_types = FALSE)
 
-# =============================================================================
-# 2. Generación de métricas
-# =============================================================================
 tabla_atributos <- datos_f %>%
   group_by(id_region, tipo_ecosistema) %>%
   summarise(
@@ -30,8 +30,5 @@ tabla_atributos <- datos_f %>%
     .groups = 'drop'
   )
 
-# =============================================================================
-# 3. Exportación
-# =============================================================================
 write_csv(tabla_atributos, snakemake@output[["tabla_resumen"]])
-cat("Resumen de atributos generado en:", snakemake@output[["tabla_resumen"]], "\n")
+message("Resumen de atributos generado en: ", snakemake@output[["tabla_resumen"]])

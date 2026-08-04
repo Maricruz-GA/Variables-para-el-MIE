@@ -7,8 +7,6 @@ date: "2026-05-29"
 engine: knitr
 ---
 
-
-
 ## 1. Introducción y Contexto del Proyecto
 
 Este tutorial establece las pautas de trabajo para homogeneizar variables básicas y expresarlas en formatos ráster congruentes. El flujo está diseñado para operar nativamente en el almacenamiento SSD del servidor centralizado de WSL (`/srv/iie/`) , garantizando que todo el equipo trabaje con las mismas dependencias bajo el entorno compartido `qgis_env`.
@@ -361,7 +359,7 @@ Para asegurar que el motor de Snakemake reconozca adecuadamente el flujo, la reg
 
 
 ```{.python}
-{{< include reglas-paso-4-txt>}}
+{{< include scripts-y-reglas/reglas-paso-4-txt>}}
 
 ```
 
@@ -525,7 +523,7 @@ Nuevamente tienes que regresar a tu `snakefile` para registrar esto y habilitar 
 
 
 ```{.python}
-{{< include reglas-paso-5-txt>}}
+{{< include scripts-y-reglas/reglas-paso-5-txt>}}
 
 ```
 
