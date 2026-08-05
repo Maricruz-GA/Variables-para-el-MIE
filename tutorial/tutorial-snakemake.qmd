@@ -359,7 +359,7 @@ Para asegurar que el motor de Snakemake reconozca adecuadamente el flujo, la reg
 
 
 ```{.python}
-{{< include scripts-y-reglas/reglas-paso-4.txt>}}
+{{< include scripts-y-reglas/reglas-paso-4.txt >}}
 
 ```
 
@@ -523,7 +523,7 @@ Nuevamente tienes que regresar a tu `snakefile` para registrar esto y habilitar 
 
 
 ```{.python}
-{{< include scripts-y-reglas/reglas-paso-5.txt>}}
+{{< include scripts-y-reglas/reglas-paso-5.txt >}}
 
 ```
 
