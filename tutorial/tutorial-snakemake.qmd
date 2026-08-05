@@ -278,11 +278,13 @@ Cuando inicias en tu sesión **SSH**, seguramente notarás la frase `qgis_env`. 
 
 ### Datos para el ejercicio
 
+Con el botón que está aquí abajo podrás descargar los datos que se requieren para arrancar el workflow que se describe en este tutorial.
+
 {{< downloadthis registros_base.csv dname="registros_base" label="Datos iniciales" type="warning" >}}
 
 ## 4. Configuración del `snakemake`
 
-El archivo `config/config.yaml` se usa para especificar los parámetros del modelo sin tener que tocar una sola línea del código de los scripts. Al usar **rutas relativas**, el flujo funcionará perfectamente sin importar qué usuario lo esté corriendo.
+El archivo `config/config.yaml` se usa para especificar los parámetros del modelo sin tener que tocar una sola línea del código de los scripts. Al usar **rutas relativas**, el flujo funcionará perfectamente sin importar qué usuario lo esté corriendo. Cada vez que tengas los scripts y las reglas que los usan en este snakefile, podrás correr `snakemake --cores  1`, lo que implica poner en marcha el workflow hasta el punto de desarrollo que lleves.
 
 ```yaml
 
