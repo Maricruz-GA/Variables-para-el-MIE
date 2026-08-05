@@ -11,7 +11,6 @@ engine: knitr
 
 Este tutorial establece las pautas de trabajo para homogeneizar variables básicas y expresarlas en formatos ráster congruentes. El flujo está diseñado para operar nativamente en el almacenamiento SSD del servidor centralizado de WSL (`/srv/iie/`) , garantizando que todo el equipo trabaje con las mismas dependencias bajo el entorno compartido `qgis_env`.
 
-
 ### Requisitos Previos en RStudio
 
 Para ejecutar Snakemake desde RStudio en este servidor, nos debemos asegurar de tener el proyecto abierto sobre la ruta de red de WSL y que la terminal local esté usando el intérprete correcto del sistema:
@@ -277,6 +276,9 @@ Conviene por muchas razones crear un *Proyecto de RStudio* localizado directamen
 
 Cuando inicias en tu sesión **SSH**, seguramente notarás la frase `qgis_env`. Se trata de una indicación de que ya estas ubicada en un **ambiente virtual de trabajo** que contiene todo lo necesario para hacer mapas con **QGis** y también está ahí habilitado **Snakemake**. Hay otros dos ambientes posibles `base` y `profiling_env`. El primero es la condición de la máquina sin ninguna preparación, probablemente no tendrás ahí ni siquiera a Python. Llegas a esa configuración con `micromamba deactivate` o con `micromamba activate base`. Hay ocasiones en las que conviene tener tal configuración, pero no será el caso en este tutorial. El otro *ambiente virtual* tiene instalada la paquetería necesaria para hacer *data profiling*. Esto quiere decir que puedes darle cualquier **CSV** con datos organizados por columnas, y te entregará un análisis muy completo de los atributos que tienen las variables y sus peculiaridades estadísticas. No lo usaremos en este tutorial, pero es algo que tiene mucho interés para las nuevas variables que estaremos procesando. Puedes hacer un análisis descriptivo de este tipo escribiendo dentro de ese entorno el comando `ydata-profiling <<ruta al archivo csv que quieras>>`. Te entregará un reporte en una archivo `HTML` que verás como una página Web. La forma de activar ese entorno virtual es `micromamba activate profiling_env`. Para los fines de este tutorial, debes asegurarte de tener activo el entorno virtual `qgis_env`. Si no ves tal indicación en tu línea de comandos de tu terminal, puedes activarlo con `micromamba activate qgis_env`en el momento en el que lo necesites.
 
+### Datos para el ejercicio
+
+{{< downloadthis registros_base.csv dname="registros_base" label="Datos iniciales" type="warning" >}}
 
 ## 4. Configuración del `snakemake`
 
